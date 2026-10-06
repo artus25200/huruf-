@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - download_audio.py
       - .github/workflows/audio.yml
 permissions:
   contents: write
@@ -14,13 +13,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download
         run: |
-          python3 download_audio.py > download_log.txt 2>&1 || true
-          curl -sSI https://www.arabicreadingcourse.com/audio/isolated-letters/ba.mp3 >> download_log.txt 2>&1 || true
-          ls -R audio >> download_log.txt 2>&1 || true
+          mkdir -p audio/isolated-letters
+          : > download_log.txt
+          for s in alif ba ta tha jiim hha kha daal thaal ra zay siin shiin saad daad taa thaa ayn ghayn fa qaf kaf lam miim nuun ha waw ya; do
+            for rel in "audio/isolated-letters/$s.mp3" "audio/$s.mp3"; do
+              if curl -fsS -m 30 -o "$rel" "https://www.arabicreadingcourse.com/$rel"; then
+                echo "ok $rel $(stat -c %s "$rel")" >> download_log.txt
+              else
+                echo "FAIL $rel" >> download_log.txt; rm -f "$rel"
+              fi
+            done
+          done
       - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Add audio files and download log"
+          git diff --cached --quiet || git commit -m "Add audio files"
           git push
