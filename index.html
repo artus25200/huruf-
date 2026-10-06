@@ -103,6 +103,8 @@ h2,h3{margin:0}
 .c4{grid-template-columns:repeat(4,1fr)}
 .c3{grid-template-columns:repeat(3,1fr)}
 .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;text-align:center;padding:4px 2px 8px}
+.cell{font:inherit;color:inherit}
+button.cell{cursor:pointer}
 .cell .ar{font-size:40px;display:block;line-height:1.6}
 .cell small{display:block;color:var(--ink2);font-size:12px}
 .ex{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
@@ -163,7 +165,7 @@ var HELP={
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),mode:'recognize',mastery:{},quiz:null,detail:null,noAudio:false,auto:true,rounds:10};
+var state={view:'home',sel:new Set([0,1]),mode:'recognize',mastery:{},quiz:null,detail:null,noAudio:false,noVoice:false,auto:true,rounds:10};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -193,6 +195,30 @@ function play(slug,kind){
     var pr=a.play();
     if(pr&&pr.catch)pr.catch(function(err){if(err&&err.name==='NotAllowedError')return;fail();});
   })(0);
+}
+var HARD=['ح','خ','ع','غ','ق','ص','ض','ط','ظ'];
+function voiceList(){try{return speechSynthesis.getVoices()||[];}catch(e){return [];}}
+function arVoice(){
+  var a=voiceList().filter(function(x){return /^ar([-_]|$)/i.test(x.lang);});
+  return a.filter(function(x){return x.localService;})[0]||a[0]||null;
+}
+function speakSyl(text){
+  try{
+    if(!('speechSynthesis' in window)){state.noVoice=true;render();return;}
+    var v=arVoice();
+    if(!v&&voiceList().length){state.noVoice=true;render();return;}
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang=v?v.lang:'ar-SA';u.rate=0.6;
+    if(v)u.voice=v;
+    if(cur){try{cur.pause();}catch(e){}}
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  }catch(e){}
+}
+try{speechSynthesis.addEventListener('voiceschanged',function(){if(state.detail!==null)render();});}catch(e){}
+function sylNote(l){
+  if(state.noVoice)return '<p class="note warn"><strong>Aucune voix arabe sur cet appareil.</strong> Les syllabes ne peuvent pas être jouées. Installe une voix arabe dans les réglages de synthèse vocale de ton téléphone, puis recharge la page.</p>';
+  if(HARD.indexOf(l.c)>=0)return '<p class="note warn">Pour cette lettre, la voix de synthèse se trompe souvent. Ne te fie pas à ce son : compare avec le bouton « nom » ou un locuteur natif.</p>';
+  return '<p class="note">Syllabes : voix de synthèse de ton appareil (pas d’enregistrement natif disponible), donc approximative.</p>';
 }
 function audioNote(){
   if(state.noAudio){
@@ -232,7 +258,7 @@ function makeQ(mode,i,p){
     var labels=[right].concat(vs.filter(function(x){return x!==v;}).map(function(x){return l.tr+x[1];}),[L[o].tr+v[1]]);
     labels=Array.from(new Set(labels));
     q.opts=shuffle(labels).map(function(t){return {h:'<b>'+t+'</b>',ok:t===right};});
-    q.audio=null;q.prompt='<div class="big ar" lang="ar">'+syl+'</div><p class="sub">Comment se lit cette syllabe ?</p>';
+    q.audio=null;q.syl=syl;q.prompt='<div class="big ar" lang="ar">'+syl+'</div><p class="sub">Comment se lit cette syllabe ?</p>';
     q.explain='<span class="ar" lang="ar">'+syl+'</span> se lit « '+right+' ».';
   }else{
     var f=pick(l.join?['ini','med','fin']:['iso','fin']);
@@ -261,7 +287,7 @@ function answer(k){
   var q=state.quiz,c=q.qs[q.i];
   if(c.picked!==null||!c.opts[k])return;
   c.picked=k;
-  if(c.opts[k].ok){q.score++;setMast(c.i,mast(c.i)+1);if(state.auto&&c.audio)play(c.audio,'name');}
+  if(c.opts[k].ok){q.score++;setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.syl)speakSyl(c.syl);}}
   else{q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}
   save();render();
   var g=app.querySelector('.fb .go');if(g){g.focus({preventScroll:true});g.scrollIntoView({block:'nearest'});}
@@ -293,7 +319,7 @@ function quizView(){
     return '<button class="opt'+(o.g?' g':'')+cls+'" data-a="opt" data-k="'+k+'"'+(done?' disabled':'')+'>'+o.h+'</button>';
   }).join('');
   var ok=done&&c.opts[c.picked].ok;
-  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(c.audio?'<button class="spk" data-a="play" data-k="name" data-s="'+c.audio+'" aria-label="Réécouter la lettre">'+SPK+'</button>':'')+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
+  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(c.audio?'<button class="spk" data-a="play" data-k="name" data-s="'+c.audio+'" aria-label="Réécouter la lettre">'+SPK+'</button>':(c.syl?'<button class="spk" data-a="syl" data-s="'+c.syl+'" aria-label="Réécouter la syllabe">'+SPK+'</button>':''))+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
   return '<div class="qtop"><button class="x" data-a="home" aria-label="Quitter">✕</button><div class="prog"><i style="width:'+(q.i/q.qs.length*100)+'%"></i></div><span class="cnt">'+(q.i+1)+'/'+q.qs.length+'</span></div>'+
     '<div class="qcard ruled">'+c.prompt+'</div><div class="opts">'+opts+'</div>'+fb;
 }
@@ -306,7 +332,7 @@ function resultView(){
 }
 function detailView(i){
   var l=L[i],f=forms(l);
-  var syl=l.noSyl?'':'<h3>Avec les voyelles brèves</h3><div class="cells c3">'+[[FA,'a'],[KA,'i'],[DA,'u']].map(function(v){return '<div class="cell"><span class="ar" lang="ar">'+l.c+v[0]+'</span><small>'+l.tr+v[1]+'</small></div>';}).join('')+'</div>';
+  var syl=l.noSyl?'':'<h3>Avec les voyelles brèves</h3><div class="cells c3">'+[[FA,'a'],[KA,'i'],[DA,'u']].map(function(v){return '<button class="cell" data-a="syl" data-s="'+l.c+v[0]+'" aria-label="Écouter '+l.tr+v[1]+'"><span class="ar" lang="ar">'+l.c+v[0]+'</span><small>'+l.tr+v[1]+'</small></button>';}).join('')+'</div>'+sylNote(l);
   return '<button class="scrim" data-a="close" aria-label="Fermer"></button>'+
   '<aside class="sheet" role="dialog" aria-modal="true" aria-label="Lettre '+l.name+'">'+
   '<button class="x" data-a="close" aria-label="Fermer">✕</button>'+
@@ -338,6 +364,7 @@ document.addEventListener('click',function(e){
   else if(a==='start'){startQuiz();}
   else if(a==='open'){state.detail=+b.dataset.l;render();}
   else if(a==='close'){state.detail=null;render();}
+  else if(a==='syl'){speakSyl(b.dataset.s);}
   else if(a==='play'){play(b.dataset.s,b.dataset.k);}
   else if(a==='opt'){answer(+b.dataset.k);}
   else if(a==='next'){var q=state.quiz;if(q.i+1<q.qs.length){q.i++;render();window.scrollTo(0,0);}else go('result');}
