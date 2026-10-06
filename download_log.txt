@@ -1,0 +1,70 @@
+Échec : audio/isolated-letters/alif.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ba.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ta.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/tha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/jiim.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/hha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/kha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/daal.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/thaal.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ra.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/zay.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/siin.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/shiin.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/saad.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/daad.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/taa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/thaa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ayn.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ghayn.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/fa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/qaf.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/kaf.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/lam.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/miim.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/nuun.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/waw.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/isolated-letters/ya.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/alif.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ba.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ta.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/tha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/jiim.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/hha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/kha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/daal.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/thaal.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ra.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/zay.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/siin.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/shiin.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/saad.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/daad.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/taa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/thaa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ayn.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ghayn.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/fa.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/qaf.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/kaf.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/lam.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/miim.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/nuun.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ha.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/waw.mp3 (HTTP Error 406: Not Acceptable)
+Échec : audio/ya.mp3 (HTTP Error 406: Not Acceptable)
+Terminé : 0 fichiers présents, 56 échecs.
+HTTP/2 200 
+content-type: audio/mpeg
+last-modified: Tue, 18 Jul 2017 12:59:22 GMT
+accept-ranges: bytes
+content-length: 18833
+date: Tue, 06 Oct 2026 20:47:36 GMT
+server: LiteSpeed
+alt-svc: h3=":443"; ma=2592000, h3-29=":443"; ma=2592000
+
+audio:
+isolated-letters
+
+audio/isolated-letters:
