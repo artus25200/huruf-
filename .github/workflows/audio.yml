@@ -12,11 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python3 download_audio.py
-      - name: Commit audio files
+      - name: Download
+        run: |
+          python3 download_audio.py > download_log.txt 2>&1 || true
+          curl -sSI https://www.arabicreadingcourse.com/audio/isolated-letters/ba.mp3 >> download_log.txt 2>&1 || true
+          ls -R audio >> download_log.txt 2>&1 || true
+      - name: Commit
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add audio
-          git diff --cached --quiet || git commit -m "Add audio files"
+          git add -A
+          git diff --cached --quiet || git commit -m "Add audio files and download log"
           git push
