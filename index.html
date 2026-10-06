@@ -26,6 +26,8 @@ h2,h3{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:600}
 .chip[aria-checked=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lbl{margin:0 2px 6px;font-size:14px;font-weight:600}
+.rounds{margin-bottom:12px}
 .chip.auto{margin:0 0 12px}
 .chip.auto[aria-checked=true]{background:var(--ok);border-color:var(--ok);color:#fff}
 .hint{margin:10px 2px 12px;color:var(--ink2);font-size:14px}
@@ -161,7 +163,7 @@ var HELP={
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),mode:'recognize',mastery:{},quiz:null,detail:null,noAudio:false,auto:true};
+var state={view:'home',sel:new Set([0,1]),mode:'recognize',mastery:{},quiz:null,detail:null,noAudio:false,auto:true,rounds:10};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -172,8 +174,8 @@ function mast(i){return state.mastery[L[i].c]||0;}
 function setMast(i,v){state.mastery[L[i].c]=Math.max(0,Math.min(3,v));}
 function pool(){return Array.from(state.sel).sort(function(a,b){return a-b;}).reduce(function(acc,k){return acc.concat(LESSONS[k]);},[]);}
 function forms(l){return {iso:l.c,ini:l.c+ZWJ,med:ZWJ+l.c+ZWJ,fin:ZWJ+l.c};}
-function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);}}catch(e){}}
-function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel)}));}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);if(s.rounds)state.rounds=s.rounds;}}catch(e){}}
+function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel),rounds:state.rounds}));}catch(e){}}
 var SLUG=['alif','ba','ta','tha','jiim','hha','kha','daal','thaal','ra','zay','siin','shiin','saad','daad','taa','thaa','ayn','ghayn','fa','qaf','kaf','lam','miim','nuun','ha','waw','ya'];
 var REMOTE='https://www.arabicreadingcourse.com/';
 var cur=null;
@@ -244,7 +246,7 @@ function makeQ(mode,i,p){
 function startQuiz(){
   var p=pool();if(!p.length)return;
   var qs=[],last=-1;
-  for(var n=0;n<10;n++){
+  for(var n=0;n<state.rounds;n++){
     var w=p.map(function(i){return (i===last&&p.length>1)?0:4-mast(i);});
     var tot=w.reduce(function(a,b){return a+b;},0),r=Math.random()*tot,i=p[0];
     for(var k=0;k<p.length;k++){r-=w[k];if(r<=0){i=p[k];break;}}
@@ -279,7 +281,7 @@ function homeView(){
   var n=pool().length;
   var chips=MODES.map(function(m){return '<button class="chip" role="radio" aria-checked="'+(state.mode===m[0])+'" data-a="mode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('');
   return '<header class="top"><h1 class="ar" lang="ar">حروف</h1><p>Les 28 lettres de l’arabe, une leçon à la fois.</p></header>'+
-    '<section class="panel"><div class="chips" role="radiogroup" aria-label="Type d’exercice">'+chips+'</div><p class="hint">'+HELP[state.mode]+'</p>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
+    '<section class="panel"><div class="chips" role="radiogroup" aria-label="Type d’exercice">'+chips+'</div><p class="hint">'+HELP[state.mode]+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
     '<button class="go" data-a="start"'+(n?'':' disabled')+'>'+(n?'Réviser '+n+' lettres':'Coche au moins une leçon')+'</button></section>'+
     LESSONS.map(function(_,li){return lessonBlock(li);}).join('');
 }
@@ -297,7 +299,7 @@ function quizView(){
 }
 function resultView(){
   var q=state.quiz,n=q.qs.length,s=q.score,miss=Array.from(q.missed);
-  var msg=s>=9?'Très solide.':(s>=6?'Bien. Un autre tour pour fixer.':'Ces lettres demandent encore du travail. Ouvre leur fiche, puis rejoue.');
+  var msg=s/n>=0.9?'Très solide.':(s/n>=0.6?'Bien. Un autre tour pour fixer.':'Ces lettres demandent encore du travail. Ouvre leur fiche, puis rejoue.');
   return '<div class="res"><div class="score">'+s+'<span>/'+n+'</span></div><p class="msg">'+msg+'</p>'+
     (miss.length?'<h3>À revoir</h3><div class="grid">'+miss.map(tile).join('')+'</div>':'')+
     '<button class="go" data-a="start">Rejouer</button><button class="ghost" data-a="home">Retour aux leçons</button></div>';
@@ -331,6 +333,7 @@ document.addEventListener('click',function(e){
   var a=b.dataset.a;
   if(a==='toggle'){var i=+b.dataset.i;if(state.sel.has(i))state.sel.delete(i);else state.sel.add(i);save();render();}
   else if(a==='mode'){state.mode=b.dataset.m;render();}
+  else if(a==='rounds'){state.rounds=+b.dataset.n;save();render();}
   else if(a==='auto'){state.auto=!state.auto;render();}
   else if(a==='start'){startQuiz();}
   else if(a==='open'){state.detail=+b.dataset.l;render();}
