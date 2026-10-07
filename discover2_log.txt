@@ -1,0 +1,28 @@
+=== A: arabicquick links about numbers
+https://arabicquick.com/ 76347 links: 44
+  sample links: ['/', '/_next/static/chunks/webpack-13b31d441b68c9ba.js', '/_next/static/css/4150cabdbcf88138.css', '/about', '/alphabet-chart', '/apple-icon.png?88cef1f2c9ebf021', '/arabic-mnemonics-alphanoidz', '/arabicbooks', '/faq', '/icon.png?916b89ba25a7ff82', '/learn', '/learn/alif', '/learn/ayn', '/learn/ba', '/learn/daad', '/learn/dal', '/learn/fa', '/learn/ghayn', '/learn/ha', '/learn/hha', '/learn/how-arabic-works', '/learn/jeem', '/learn/kaf', '/learn/kha', '/learn/lam', '/learn/meem', '/learn/noon', '/learn/qaf', '/learn/ra', '/learn/saad', '/learn/seen', '/learn/sheen', '/learn/ta', '/learn/tha', '/learn/thal', '/learn/thoh', '/learn/toh', '/learn/wow', '/learn/ya', '/learn/zay']
+https://arabicquick.com/sitemap.xml 6205 links: 37
+  sample links: ['/about', '/alphabet-chart', '/arabic-mnemonics-alphanoidz', '/arabicbooks', '/faq', '/learn', '/learn/alif', '/learn/ayn', '/learn/ba', '/learn/daad', '/learn/dal', '/learn/fa', '/learn/ghayn', '/learn/ha', '/learn/hha', '/learn/jeem', '/learn/kaf', '/learn/kha', '/learn/lam', '/learn/meem', '/learn/noon', '/learn/qaf', '/learn/ra', '/learn/saad', '/learn/seen', '/learn/sheen', '/learn/ta', '/learn/tha', '/learn/thal', '/learn/thoh', '/learn/toh', '/learn/wow', '/learn/ya', '/learn/zay', '/privacy', '/resources', '/reverse-arabic-text']
+https://arabicquick.com/alphabet-chart 159431 links: 44
+  sample links: ['/', '/_next/static/chunks/webpack-13b31d441b68c9ba.js', '/_next/static/css/4150cabdbcf88138.css', '/about', '/alphabet-chart', '/alphabet-chart.pdf', '/apple-icon.png?88cef1f2c9ebf021', '/arabic-mnemonics-alphanoidz', '/arabicbooks', '/faq', '/icon.png?916b89ba25a7ff82', '/learn', '/learn/alif', '/learn/ayn', '/learn/ba', '/learn/daad', '/learn/dal', '/learn/fa', '/learn/ghayn', '/learn/ha', '/learn/hha', '/learn/jeem', '/learn/kaf', '/learn/kha', '/learn/lam', '/learn/meem', '/learn/noon', '/learn/qaf', '/learn/ra', '/learn/saad', '/learn/seen', '/learn/sheen', '/learn/ta', '/learn/tha', '/learn/thal', '/learn/thoh', '/learn/toh', '/learn/wow', '/learn/ya', '/learn/zay']
+=== B: guess number pages
+no /numbers HTTP Error 404: Not Found
+no /learn/numbers HTTP Error 404: Not Found
+no /learn/number HTTP Error 404: Not Found
+no /arabic-numbers HTTP Error 404: Not Found
+no /numbers-chart HTTP Error 404: Not Found
+no /learn/numbers-0-10 HTTP Error 404: Not Found
+no /vocabulary/numbers HTTP Error 404: Not Found
+no /learn/vocabulary/numbers HTTP Error 404: Not Found
+=== C: Wikimedia Commons (slow, polite)
+صفر -> ['File:LL-Q13955 (ara)-Zinou2go-صفر.wav', 'File:LL-Q13955 (ara)-Ov3for-صفر.wav', 'File:LL-Q13955 (ara)-Raghda (Akbarali)-صفر.wav']
+واحد -> ['File:LL-Q13955 (ara)-Zinou2go-واحد.wav', 'File:LL-Q13955 (ara)-Ov3for-واحد.wav']
+اثنان -> ['File:LL-Q13955 (ara)-Ov3for-اثنان.wav', 'File:LL-Q13955 (ara)-Zinou2go-اثنان.wav']
+ثلاثة -> ['File:LL-Q13955 (ara)-Zinou2go-ثلاثة.wav', 'File:LL-Q13955 (ara)-Ov3for-ثلاثة.wav', 'File:LL-Q13955 (ara)-Nehaoua-ثلاثة.wav']
+أربعة -> ['File:LL-Q13955 (ara)-Fenakhay-أربعة.wav', 'File:LL-Q13955 (ara)-Zinou2go-أربعة.wav', 'File:LL-Q13955 (ara)-Ov3for-أربعة.wav']
+خمسة -> ['File:LL-Q13955 (ara)-Zinou2go-خمسة.wav', 'File:LL-Q13955 (ara)-Ov3for-خمسة.wav', 'File:LL-Q13955 (ara)-Spotless Mind1988-خمسة.wav']
+ستة -> ['File:LL-Q13955 (ara)-Zinou2go-ستة.wav', 'File:LL-Q13955 (ara)-Ov3for-ستة.wav']
+سبعة -> ['File:LL-Q13955 (ara)-Zinou2go-سبعة.wav', 'File:LL-Q13955 (ara)-Ov3for-سبعة.wav']
+ثمانية -> ['File:LL-Q13955 (ara)-Zinou2go-ثمانية.wav', 'File:LL-Q13955 (ara)-Ov3for-ثمانية.wav']
+تسعة -> ['File:LL-Q13955 (ara)-Ov3for-تسعة.wav', 'File:LL-Q13955 (ara)-Zinou2go-تسعة.wav']
+عشرة -> ['File:LL-Q13955 (ara)-Zinou2go-عشرة.wav', 'File:LL-Q13955 (ara)-Ov3for-عشرة.wav', 'File:LL-Q13955 (ara)-Raghda (Akbarali)-عشرة.wav']
