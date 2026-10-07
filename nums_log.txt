@@ -1,0 +1,16 @@
+ok 0 صفر <- File:LL-Q13955 (ara)-Zinou2go-صفر.wav (92972 bytes) -> 8403 bytes
+ok 1 واحد <- File:LL-Q13955 (ara)-Zinou2go-واحد.wav (101164 bytes) -> 9030 bytes
+ok 2 اثنان <- File:LL-Q13955 (ara)-Zinou2go-اثنان.wav (109356 bytes) -> 9657 bytes
+ok 3 ثلاثة <- File:LL-Q13955 (ara)-Zinou2go-ثلاثة.wav (117548 bytes) -> 10284 bytes
+ok 4 أربعة <- File:LL-Q13955 (ara)-Zinou2go-أربعة.wav (101164 bytes) -> 9030 bytes
+ok 5 خمسة <- File:LL-Q13955 (ara)-Zinou2go-خمسة.wav (101164 bytes) -> 9030 bytes
+ok 6 ستة <- File:LL-Q13955 (ara)-Zinou2go-ستة.wav (109356 bytes) -> 9657 bytes
+ok 7 سبعة <- File:LL-Q13955 (ara)-Zinou2go-سبعة.wav (117548 bytes) -> 10284 bytes
+ok 8 ثمانية <- File:LL-Q13955 (ara)-Zinou2go-ثمانية.wav (117548 bytes) -> 10284 bytes
+ok 9 تسعة <- File:LL-Q13955 (ara)-Zinou2go-تسعة.wav (92972 bytes) -> 8403 bytes
+429, retry 1
+429, retry 2
+429, retry 3
+429, retry 4
+FAIL 10 عشرة HTTP Error 429: Too many requests - please contact noc@wikimedia.org to discuss a less disruptive approach or instead use thumbnail images in sizes listed on https://w.wiki/GHai. (0c640b1)
+DONE
