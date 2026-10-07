@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ḥurūf · les lettres arabes</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#10323A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Huruf">
 <style>
 :root{
   --paper:#E8EEED; --card:#FAFCFB; --ink:#10323A; --ink2:#4C6970; --line:#C5D3D1;
@@ -113,7 +119,7 @@ button.cell{cursor:pointer}
 button.cell:disabled{opacity:.4;cursor:default}
 .bigplay{width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;margin:0 auto 6px}
 .bigplay svg{width:36px;height:36px}
-.qcard .big.word{font-size:64px;line-height:1.6}
+.qcard .big.word{font-size:64px;line-height:1.9}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
 .tcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px;text-align:left;font-weight:600}
 .tcard .ar{font-size:30px;line-height:1.5;min-width:36px;text-align:center}
@@ -179,7 +185,7 @@ var HELP={
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,topic:null,replay:null,noAudio:false,auto:true,rounds:10};
+var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,topic:null,replay:null,noAudio:false,auto:true,rounds:10,vowels:true};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -190,8 +196,8 @@ function mast(i){return state.mastery[L[i].c]||0;}
 function setMast(i,v){state.mastery[L[i].c]=Math.max(0,Math.min(3,v));}
 function pool(){return Array.from(state.sel).sort(function(a,b){return a-b;}).reduce(function(acc,k){return acc.concat(LESSONS[k]);},[]);}
 function forms(l){return {iso:l.c,ini:l.c+ZWJ,med:ZWJ+l.c+ZWJ,fin:ZWJ+l.c};}
-function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);if(s.rounds)state.rounds=s.rounds;if(s.modes&&s.modes.length)state.modes=new Set(s.modes);}}catch(e){}}
-function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel),rounds:state.rounds,modes:Array.from(state.modes)}));}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);if(s.rounds)state.rounds=s.rounds;if(typeof s.vowels==='boolean')state.vowels=s.vowels;if(s.modes&&s.modes.length)state.modes=new Set(s.modes);}}catch(e){}}
+function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel),rounds:state.rounds,vowels:state.vowels,modes:Array.from(state.modes)}));}catch(e){}}
 var SLUG=['alif','ba','ta','tha','jiim','hha','kha','daal','thaal','ra','zay','siin','shiin','saad','daad','taa','thaa','ayn','ghayn','fa','qaf','kaf','lam','miim','nuun','ha','waw','ya'];
 var REMOTE='https://www.arabicreadingcourse.com/';
 var cur=null;
@@ -275,12 +281,13 @@ function makeQ(mode,i,p){
 var EXT=[{"title":"Voyelles longues","glyph":"ـَا","key":"Les lettres ا و ي allongent la voyelle brève qui les précède : fatha + ا = ā, damma + و = ū, kasra + ي = ī. Elles s’écrivent toujours, même dans les textes sans voyelles brèves.","ex":[{"ar":"كِتَاب","tr":"kitāb","fr":"livre"},{"ar":"بَاب","tr":"bāb","fr":"porte"},{"ar":"نُور","tr":"nūr","fr":"lumière"},{"ar":"ثُوم","tr":"thūm","fr":"ail"},{"ar":"كَبِير","tr":"kabīr","fr":"grand"},{"ar":"فِيل","tr":"fīl","fr":"éléphant"}]},{"title":"Sukūn","glyph":"ـْ","key":"Le petit cercle ْ indique que la consonne n’a pas de voyelle : on l’enchaîne directement avec la suivante (dars, et non da-ra-s). Après une fatha, وْ donne aw et يْ donne ay.","ex":[{"ar":"دَرْس","tr":"dars","fr":"leçon"},{"ar":"مَكْتَب","tr":"maktab","fr":"bureau"},{"ar":"بَيْت","tr":"bayt","fr":"maison"},{"ar":"يَوْم","tr":"yawm","fr":"jour"},{"ar":"كَلْب","tr":"kalb","fr":"chien"},{"ar":"قَلْب","tr":"qalb","fr":"cœur"}]},{"title":"Shadda","glyph":"ـّ","key":"La shadda ّ double la consonne : on la prononce deux fois, avec un petit temps d’arrêt. سُكَّر se lit suk-kar. La voyelle se place sur la shadda.","ex":[{"ar":"جَدّ","tr":"jadd","fr":"grand-père"},{"ar":"أُمّ","tr":"umm","fr":"mère"},{"ar":"سُكَّر","tr":"sukkar","fr":"sucre"},{"ar":"مُعَلِّم","tr":"muʿallim","fr":"enseignant"}]},{"title":"Tanwīn","glyph":"ـً","key":"Le tanwīn double la voyelle finale et ajoute un son n : ٌ = -un, ً = -an (le plus souvent avec un alif : ًا), ٍ = -in. Il marque l’indéfini (« un / une »).","ex":[{"ar":"بَيْتٌ","tr":"baytun","fr":"une maison"},{"ar":"بَيْتٍ","tr":"baytin","fr":"d’une maison"},{"ar":"بَيْتًا","tr":"baytan","fr":"une maison (accusatif)"},{"ar":"كِتَابٌ","tr":"kitābun","fr":"un livre"},{"ar":"كِتَابٍ","tr":"kitābin","fr":"d’un livre"},{"ar":"كِتَابًا","tr":"kitāban","fr":"un livre (accusatif)"}]},{"title":"Tāʾ marbūṭa","glyph":"ة","key":"La ة se trouve à la fin des mots et se prononce -a (-at quand un mot suit). Elle marque souvent le féminin. C’est un ه avec deux points : elle ne se lie jamais à la lettre suivante.","ex":[{"ar":"مَدْرَسَة","tr":"madrasa","fr":"école"},{"ar":"مَكْتَبَة","tr":"maktaba","fr":"bibliothèque"},{"ar":"وَرْدَة","tr":"warda","fr":"rose"},{"ar":"سَيَّارَة","tr":"sayyāra","fr":"voiture"},{"ar":"حَقِيبَة","tr":"ḥaqība","fr":"sac"},{"ar":"جَامِعَة","tr":"jāmiʿa","fr":"université"}]},{"title":"Hamza","glyph":"ء","key":"La hamza ء est un petit arrêt dans la gorge, comme au milieu du « uh-oh » anglais. Elle se pose sur un alif (أ = hamza + a, إ = hamza + i), sur un و (ؤ), sur un ي (ئ) ou seule (ء).","ex":[{"ar":"أَب","tr":"ab","fr":"père"},{"ar":"إِبْرَة","tr":"ibra","fr":"aiguille"},{"ar":"سُؤَال","tr":"suʾāl","fr":"question"},{"ar":"مَاء","tr":"māʾ","fr":"eau"},{"ar":"رَأْس","tr":"raʾs","fr":"tête"},{"ar":"بِئْر","tr":"biʾr","fr":"puits"}]}];
 var MARKS=/[\u064B-\u0652\u0670\u0640]/g;
 function norm(t){return t.replace(MARKS,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ء/g,'').replace(/ة/g,'ه');}
+var VOW={"أسد":"أَسَد","فأر":"فَأْر","نبأ":"نَبَأ","بجعة":"بَجَعَة","لعبة":"لُعْبَة","عنب":"عِنَب","تمر":"تَمْر","زعتر":"زَعْتَر","توت":"تُوت","ثوم":"ثُوم","قثاء":"قِثَّاء","ماموث":"مَامُوث","جرس":"جَرَس","نجم":"نَجْم","سراج":"سِرَاج","حصان":"حِصَان","طحينة":"طَحِينَة","تفاح":"تُفَّاح","خروف":"خَرُوف","نخلة":"نَخْلَة","خوخ":"خَوْخ","دب":"دُبّ","عدس":"عَدَس","براد":"بَرَّاد","ذبابة":"ذُبَابَة","ينذر":"يُنْذِر","رذاذ":"رَذَاذ","ريشة":"رِيشَة","كرة":"كُرَة","عطر":"عِطْر","زجاج":"زُجَاج","منزل":"مَنْزِل","موز":"مَوْز","سقف":"سَقْف","حاسبة":"حَاسِبَة","شمس":"شَمْس","شجر":"شَجَر","منشفة":"مِنْشَفَة","فراش":"فِرَاش","صقر":"صَقْر","عصير":"عَصِير","قرص":"قُرْص","ضبع":"ضَبُع","منضدة":"مِنْضَدَة","بيض":"بَيْض","طاووس":"طَاوُوس","بطريق":"بِطْرِيق","وطواط":"وَطْوَاط","ظرف":"ظَرْف","عظمة":"عَظْمَة","قيظ":"قَيْظ","عروس":"عَرُوس","نعجة":"نَعْجَة","نعناع":"نَعْنَاع","غزال":"غَزَال","الغروب":"الْغُرُوب","صمغ":"صَمْغ","فراولة":"فَرَاوِلَة","مدفأة":"مِدْفَأَة","معطف":"مِعْطَف","قمر":"قَمَر","بقرة":"بَقَرَة","ورق":"وَرَق","كتاب":"كِتَاب","شوكة":"شَوْكَة","كعك":"كَعْك","ليمونة":"لَيْمُونَة","جلد":"جِلْد","نخيل":"نَخِيل","ماء":"مَاء","قميص":"قَمِيص","يوم":"يَوْم","نعامة":"نَعَامَة","عندليب":"عَنْدَلِيب","عنوان":"عُنْوَان","هرة":"هِرَّة","نهر":"نَهْر","الله":"اللَّه","وردة":"وَرْدَة","ضوء":"ضَوْء","مانجو":"مَانْجُو","يمين":"يَمِين","عيادة":"عِيَادَة"};
 var ALLW=[];
 Object.keys(QWORDS).forEach(function(slug){
   var gi=QID.indexOf(slug);
   QWORDS[slug].forEach(function(w){
     var tr=w.f.replace(/\.mp3$/i,'').split('_').pop().toLowerCase();
-    ALLW.push({ar:w.a.replace(MARKS,''),tr:tr,fr:FR[(w.e||'').toLowerCase()]||w.e,f:w.f,g:gi,n:norm(w.a)});
+    ALLW.push({ar:w.a.replace(MARKS,''),v:VOW[w.a.replace(MARKS,'')]||w.a.replace(MARKS,''),tr:tr,fr:FR[(w.e||'').toLowerCase()]||w.e,f:w.f,g:gi,n:norm(w.a)});
   });
 });
 var usedW={};
@@ -325,9 +332,9 @@ function makeWordQ(p){
   others.forEach(function(o){if(list.length<4&&list.indexOf(o.t)<0)list.push(o.t);});
   var unk=w.n.split('').some(function(ch){return !known[ch];});
   return {mode:'mots',i:-1,picked:null,wordAudio:w.f,
-    prompt:'<div class="big ar word" lang="ar">'+w.ar+'</div><p class="sub">Comment se lit ce mot ?'+(unk?'<br><small>Il contient des lettres pas encore vues.</small>':'')+'</p>',
+    prompt:'<div class="big ar word" lang="ar">'+(state.vowels?w.v:w.ar)+'</div><p class="sub">Comment se lit ce mot ?'+(unk?'<br><small>Il contient des lettres pas encore vues.</small>':'')+'</p>',
     opts:uniqOpts(list,w.tr,function(t){return '<b>'+t+'</b>';}),
-    explain:'<span class="ar" lang="ar">'+w.ar+'</span> se lit « '+w.tr+' » : '+w.fr+'.'};
+    explain:'<span class="ar" lang="ar">'+w.v+'</span> se lit « '+w.tr+' » : '+w.fr+'.'};
 }
 function makeSignQ(ti){
   var t=EXT[ti===undefined||ti===null?rnd(EXT.length):ti],e=pick(t.ex);
@@ -410,7 +417,7 @@ function homeView(){
   var n=pool().length;
   var chips=MODES.map(function(m){return '<button class="chip" role="checkbox" aria-checked="'+state.modes.has(m[0])+'" data-a="mode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('');
   return '<header class="top"><h1 class="ar" lang="ar">حروف</h1><p>Les 28 lettres de l’arabe, une leçon à la fois.</p></header>'+
-    '<section class="panel"><div class="chips" role="group" aria-label="Types d’exercices">'+chips+'</div><p class="hint">'+(state.modes.size===1?HELP[Array.from(state.modes)[0]]:'Les exercices cochés sont mélangés.')+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
+    '<section class="panel"><div class="chips" role="group" aria-label="Types d’exercices">'+chips+'</div><p class="hint">'+(state.modes.size===1?HELP[Array.from(state.modes)[0]]:'Les exercices cochés sont mélangés.')+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+'<button class="chip auto" role="switch" aria-checked="'+state.vowels+'" data-a="vowels">Voyelles brèves dans les mots : '+(state.vowels?'oui':'non')+'</button>'+
     '<button class="go" data-a="start"'+(canStart()?'':' disabled')+'>'+(n?'Réviser '+n+' lettres':(canStart()?'Commencer':'Coche au moins une leçon'))+'</button></section>'+
     LESSONS.map(function(_,li){return lessonBlock(li);}).join('')+extBlock();
 }
@@ -474,6 +481,7 @@ document.addEventListener('click',function(e){
   if(a==='toggle'){var i=+b.dataset.i;if(state.sel.has(i))state.sel.delete(i);else state.sel.add(i);save();render();}
   else if(a==='mode'){var m=b.dataset.m;if(state.modes.has(m)){if(state.modes.size>1)state.modes.delete(m);}else state.modes.add(m);save();render();}
   else if(a==='rounds'){state.rounds=+b.dataset.n;save();render();}
+  else if(a==='vowels'){state.vowels=!state.vowels;save();render();}
   else if(a==='auto'){state.auto=!state.auto;render();}
   else if(a==='start'){startQuiz();}
   else if(a==='open'){state.detail=+b.dataset.l;render();}
