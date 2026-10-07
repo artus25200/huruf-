@@ -1,0 +1,21 @@
+name: Fetch Arabic Quick audio
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - fetch_quick.py
+      - .github/workflows/fetch_quick.yml
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 fetch_quick.py || true
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A audio quick_manifest.json quick_log.txt
+          git diff --cached --quiet || git commit -m "Add Arabic Quick audio and manifest"
+          git push
