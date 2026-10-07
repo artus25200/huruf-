@@ -26,6 +26,7 @@ h2,h3{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:600}
 .chip[aria-checked=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip[role=checkbox][aria-checked=true]::before{content:'✓ '}
 .lbl{margin:0 2px 6px;font-size:14px;font-weight:600}
 .rounds{margin-bottom:12px}
 .chip.auto{margin:0 0 12px}
@@ -155,17 +156,16 @@ var L=[
 {c:'ي',name:'yāʾ',ar:'ياء',tr:'y',say:'comme « y » (ou ī long)',tip:'2 points en dessous.',join:1,fam:'ba',ex:['يَد','yad','main']}
 ];
 var LESSONS=[[0,1,2,3],[4,5,6],[7,8,9,10],[11,12,13,14],[15,16,17,18],[19,20,21,22],[23,24,25,26,27]];
-var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes'],['mix','Mélange']];
+var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes']];
 var HELP={
   recognize:'Tu vois une lettre, tu choisis son nom.',
   find:'Tu vois un nom, tu choisis la lettre.',
   read:'Lettre + voyelle brève : lis la syllabe.',
-  forms:'La lettre au début, au milieu ou à la fin d’un mot.',
-  mix:'Tous les exercices mélangés.'
+  forms:'La lettre au début, au milieu ou à la fin d’un mot.'
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),mode:'recognize',mastery:{},quiz:null,detail:null,noAudio:false,noVoice:false,auto:true,rounds:10};
+var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,noAudio:false,noVoice:false,auto:true,rounds:10};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -176,8 +176,8 @@ function mast(i){return state.mastery[L[i].c]||0;}
 function setMast(i,v){state.mastery[L[i].c]=Math.max(0,Math.min(3,v));}
 function pool(){return Array.from(state.sel).sort(function(a,b){return a-b;}).reduce(function(acc,k){return acc.concat(LESSONS[k]);},[]);}
 function forms(l){return {iso:l.c,ini:l.c+ZWJ,med:ZWJ+l.c+ZWJ,fin:ZWJ+l.c};}
-function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);if(s.rounds)state.rounds=s.rounds;}}catch(e){}}
-function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel),rounds:state.rounds}));}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem('huruf')||'null');if(s){state.mastery=s.mastery||{};if(s.sel&&s.sel.length)state.sel=new Set(s.sel);if(s.rounds)state.rounds=s.rounds;if(s.modes&&s.modes.length)state.modes=new Set(s.modes);}}catch(e){}}
+function save(){try{localStorage.setItem('huruf',JSON.stringify({mastery:state.mastery,sel:Array.from(state.sel),rounds:state.rounds,modes:Array.from(state.modes)}));}catch(e){}}
 var SLUG=['alif','ba','ta','tha','jiim','hha','kha','daal','thaal','ra','zay','siin','shiin','saad','daad','taa','thaa','ayn','ghayn','fa','qaf','kaf','lam','miim','nuun','ha','waw','ya'];
 var REMOTE='https://www.arabicreadingcourse.com/';
 var cur=null;
@@ -277,7 +277,7 @@ function startQuiz(){
     var tot=w.reduce(function(a,b){return a+b;},0),r=Math.random()*tot,i=p[0];
     for(var k=0;k<p.length;k++){r-=w[k];if(r<=0){i=p[k];break;}}
     last=i;
-    var mode=state.mode==='mix'?pick(['recognize','find','read','forms']):state.mode;
+    var mode=pick(Array.from(state.modes));
     qs.push(makeQ(mode,i,p));
   }
   state.quiz={qs:qs,i:0,score:0,missed:new Set()};
@@ -305,9 +305,9 @@ function lessonBlock(li){
 }
 function homeView(){
   var n=pool().length;
-  var chips=MODES.map(function(m){return '<button class="chip" role="radio" aria-checked="'+(state.mode===m[0])+'" data-a="mode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('');
+  var chips=MODES.map(function(m){return '<button class="chip" role="checkbox" aria-checked="'+state.modes.has(m[0])+'" data-a="mode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('');
   return '<header class="top"><h1 class="ar" lang="ar">حروف</h1><p>Les 28 lettres de l’arabe, une leçon à la fois.</p></header>'+
-    '<section class="panel"><div class="chips" role="radiogroup" aria-label="Type d’exercice">'+chips+'</div><p class="hint">'+HELP[state.mode]+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
+    '<section class="panel"><div class="chips" role="group" aria-label="Types d’exercices">'+chips+'</div><p class="hint">'+(state.modes.size===1?HELP[Array.from(state.modes)[0]]:'Les exercices cochés sont mélangés.')+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
     '<button class="go" data-a="start"'+(n?'':' disabled')+'>'+(n?'Réviser '+n+' lettres':'Coche au moins une leçon')+'</button></section>'+
     LESSONS.map(function(_,li){return lessonBlock(li);}).join('');
 }
@@ -358,7 +358,7 @@ document.addEventListener('click',function(e){
   var b=e.target.closest('[data-a]');if(!b)return;
   var a=b.dataset.a;
   if(a==='toggle'){var i=+b.dataset.i;if(state.sel.has(i))state.sel.delete(i);else state.sel.add(i);save();render();}
-  else if(a==='mode'){state.mode=b.dataset.m;render();}
+  else if(a==='mode'){var m=b.dataset.m;if(state.modes.has(m)){if(state.modes.size>1)state.modes.delete(m);}else state.modes.add(m);save();render();}
   else if(a==='rounds'){state.rounds=+b.dataset.n;save();render();}
   else if(a==='auto'){state.auto=!state.auto;render();}
   else if(a==='start'){startQuiz();}
