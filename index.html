@@ -111,6 +111,14 @@ button.cell{cursor:pointer}
 .ex{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .ex+.ex{margin-top:8px}
 button.cell:disabled{opacity:.4;cursor:default}
+.bigplay{width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;margin:0 auto 6px}
+.bigplay svg{width:36px;height:36px}
+.qcard .big.word{font-size:64px;line-height:1.6}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px;text-align:left;font-weight:600}
+.tcard .ar{font-size:30px;line-height:1.5;min-width:36px;text-align:center}
+.lhead.static{cursor:default}
+.th{margin-top:34px;font-size:24px}
 .ex .ar{font-size:36px}
 .ex div{flex:1}
 .note{font-size:13px;color:var(--ink2);margin:14px 0 0}
@@ -158,17 +166,20 @@ var L=[
 {c:'ي',name:'yāʾ',ar:'ياء',tr:'y',say:'comme « y » (ou ī long)',tip:'2 points en dessous.',join:1,fam:'ba',ex:['يَد','yad','main']}
 ];
 var LESSONS=[[0,1,2,3],[4,5,6],[7,8,9,10],[11,12,13,14],[15,16,17,18],[19,20,21,22],[23,24,25,26,27]];
-var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes'],['formread','Forme & lire']];
+var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes'],['formread','Forme & lire'],['dictee','Dictée'],['mots','Lire des mots'],['signes','Signes']];
 var HELP={
   recognize:'Tu vois une lettre, tu choisis son nom.',
   find:'Tu vois un nom, tu choisis la lettre.',
   read:'Lettre + voyelle brève : lis la syllabe.',
   forms:'La lettre au début, au milieu ou à la fin d’un mot.',
-  formread:'La lettre liée dans un mot, avec sa voyelle : lis la syllabe.'
+  formread:'La lettre liée dans un mot, avec sa voyelle : lis la syllabe.',
+  dictee:'Tu écoutes un son, tu choisis la lettre ou la syllabe.',
+  mots:'Lis un vrai mot (sans voyelles brèves) et choisis sa translittération.',
+  signes:'Voyelles longues, sukūn, shadda, tanwīn, tāʾ marbūṭa, hamza.'
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,noAudio:false,auto:true,rounds:10};
+var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,topic:null,replay:null,noAudio:false,auto:true,rounds:10};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -261,16 +272,98 @@ function makeQ(mode,i,p){
   }
   return q;
 }
+var EXT=[{"title":"Voyelles longues","glyph":"ـَا","key":"Les lettres ا و ي allongent la voyelle brève qui les précède : fatha + ا = ā, damma + و = ū, kasra + ي = ī. Elles s’écrivent toujours, même dans les textes sans voyelles brèves.","ex":[{"ar":"كِتَاب","tr":"kitāb","fr":"livre"},{"ar":"بَاب","tr":"bāb","fr":"porte"},{"ar":"نُور","tr":"nūr","fr":"lumière"},{"ar":"ثُوم","tr":"thūm","fr":"ail"},{"ar":"كَبِير","tr":"kabīr","fr":"grand"},{"ar":"فِيل","tr":"fīl","fr":"éléphant"}]},{"title":"Sukūn","glyph":"ـْ","key":"Le petit cercle ْ indique que la consonne n’a pas de voyelle : on l’enchaîne directement avec la suivante (dars, et non da-ra-s). Après une fatha, وْ donne aw et يْ donne ay.","ex":[{"ar":"دَرْس","tr":"dars","fr":"leçon"},{"ar":"مَكْتَب","tr":"maktab","fr":"bureau"},{"ar":"بَيْت","tr":"bayt","fr":"maison"},{"ar":"يَوْم","tr":"yawm","fr":"jour"},{"ar":"كَلْب","tr":"kalb","fr":"chien"},{"ar":"قَلْب","tr":"qalb","fr":"cœur"}]},{"title":"Shadda","glyph":"ـّ","key":"La shadda ّ double la consonne : on la prononce deux fois, avec un petit temps d’arrêt. سُكَّر se lit suk-kar. La voyelle se place sur la shadda.","ex":[{"ar":"جَدّ","tr":"jadd","fr":"grand-père"},{"ar":"أُمّ","tr":"umm","fr":"mère"},{"ar":"سُكَّر","tr":"sukkar","fr":"sucre"},{"ar":"مُعَلِّم","tr":"muʿallim","fr":"enseignant"}]},{"title":"Tanwīn","glyph":"ـً","key":"Le tanwīn double la voyelle finale et ajoute un son n : ٌ = -un, ً = -an (le plus souvent avec un alif : ًا), ٍ = -in. Il marque l’indéfini (« un / une »).","ex":[{"ar":"بَيْتٌ","tr":"baytun","fr":"une maison"},{"ar":"بَيْتٍ","tr":"baytin","fr":"d’une maison"},{"ar":"بَيْتًا","tr":"baytan","fr":"une maison (accusatif)"},{"ar":"كِتَابٌ","tr":"kitābun","fr":"un livre"},{"ar":"كِتَابٍ","tr":"kitābin","fr":"d’un livre"},{"ar":"كِتَابًا","tr":"kitāban","fr":"un livre (accusatif)"}]},{"title":"Tāʾ marbūṭa","glyph":"ة","key":"La ة se trouve à la fin des mots et se prononce -a (-at quand un mot suit). Elle marque souvent le féminin. C’est un ه avec deux points : elle ne se lie jamais à la lettre suivante.","ex":[{"ar":"مَدْرَسَة","tr":"madrasa","fr":"école"},{"ar":"مَكْتَبَة","tr":"maktaba","fr":"bibliothèque"},{"ar":"وَرْدَة","tr":"warda","fr":"rose"},{"ar":"سَيَّارَة","tr":"sayyāra","fr":"voiture"},{"ar":"حَقِيبَة","tr":"ḥaqība","fr":"sac"},{"ar":"جَامِعَة","tr":"jāmiʿa","fr":"université"}]},{"title":"Hamza","glyph":"ء","key":"La hamza ء est un petit arrêt dans la gorge, comme au milieu du « uh-oh » anglais. Elle se pose sur un alif (أ = hamza + a, إ = hamza + i), sur un و (ؤ), sur un ي (ئ) ou seule (ء).","ex":[{"ar":"أَب","tr":"ab","fr":"père"},{"ar":"إِبْرَة","tr":"ibra","fr":"aiguille"},{"ar":"سُؤَال","tr":"suʾāl","fr":"question"},{"ar":"مَاء","tr":"māʾ","fr":"eau"},{"ar":"رَأْس","tr":"raʾs","fr":"tête"},{"ar":"بِئْر","tr":"biʾr","fr":"puits"}]}];
+var MARKS=/[\u064B-\u0652\u0670\u0640]/g;
+function norm(t){return t.replace(MARKS,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ء/g,'').replace(/ة/g,'ه');}
+var ALLW=[];
+Object.keys(QWORDS).forEach(function(slug){
+  var gi=QID.indexOf(slug);
+  QWORDS[slug].forEach(function(w){
+    var tr=w.f.replace(/\.mp3$/i,'').split('_').pop().toLowerCase();
+    ALLW.push({ar:w.a.replace(MARKS,''),tr:tr,fr:FR[(w.e||'').toLowerCase()]||w.e,f:w.f,g:gi,n:norm(w.a)});
+  });
+});
+var usedW={};
+function bigPlay(q){return '<button class="bigplay" data-a="play" data-k="'+q.play[0]+'" data-s="'+q.play[1]+'" aria-label="Réécouter le son">'+SPK+'</button>';}
+function uniqOpts(list,right,mk){
+  var seen={},out=[];
+  list.forEach(function(t){if(!seen[t]){seen[t]=1;out.push(t);}});
+  return shuffle(out).map(function(t){return {h:mk(t),ok:t===right};});
+}
+function makeDictee(i,p){
+  var l=L[i],q={mode:'dictee',i:i,picked:null};
+  var vs=[[FA,'a','fatha'],[KA,'i','kasra'],[DA,'u','damma']],v=pick(vs),sk=QID[i]+'-'+v[2];
+  var glyphOpt=function(t){return '<span class="ar" lang="ar">'+t+'</span>';};
+  if(!l.noSyl&&!QMISS[sk]&&Math.random()<0.5){
+    q.play=['q',sk];
+    var g=l.c+v[0];
+    var o=distract(i,6,p).filter(function(k){return !L[k].noSyl;})[0];
+    var list=[g].concat(vs.filter(function(x){return x!==v;}).map(function(x){return l.c+x[0];}),[L[o].c+v[0]]);
+    q.opts=uniqOpts(list,g,glyphOpt).map(function(o2){o2.g=1;return o2;});
+    q.prompt=bigPlay(q)+'<p class="sub">Quelle syllabe entends-tu ?</p>';
+    q.explain='<span class="ar" lang="ar">'+g+'</span> se lit « '+l.tr+v[1]+' ».';
+  }else{
+    q.play=['name',SLUG[i]];
+    var ids=shuffle([i].concat(distract(i,3,p)));
+    q.opts=ids.map(function(k){return {h:glyphOpt(L[k].c),ok:k===i,g:1};});
+    q.prompt=bigPlay(q)+'<p class="sub">Quelle lettre entends-tu ?</p>';
+    q.explain='<span class="ar" lang="ar">'+l.c+'</span> s’appelle '+l.name+' ('+l.tr+'). '+l.tip;
+  }
+  return q;
+}
+function makeWordQ(p){
+  var maxL=Math.max.apply(null,Array.from(state.sel).concat([0]));
+  var known={};
+  for(var k=0;k<=maxL;k++)LESSONS[k].forEach(function(i){known[L[i].c]=1;});
+  var easy=ALLW.filter(function(w){return w.n.split('').every(function(ch){return known[ch];});});
+  var cand=easy.length>=4?easy:ALLW.filter(function(w){return p.indexOf(w.g)>=0;});
+  if(!cand.length)cand=ALLW;
+  var fresh=cand.filter(function(w){return !usedW[w.f];});
+  var w=pick(fresh.length?fresh:cand);usedW[w.f]=1;
+  var others=ALLW.filter(function(x){return x.tr!==w.tr;}).map(function(x){return {t:x.tr,s:Math.abs(x.tr.length-w.tr.length)+Math.random()*2.5+(cand.indexOf(x)>=0?0:1)};}).sort(function(a,b){return a.s-b.s;});
+  var list=[w.tr];
+  others.forEach(function(o){if(list.length<4&&list.indexOf(o.t)<0)list.push(o.t);});
+  var unk=w.n.split('').some(function(ch){return !known[ch];});
+  return {mode:'mots',i:-1,picked:null,wordAudio:w.f,
+    prompt:'<div class="big ar word" lang="ar">'+w.ar+'</div><p class="sub">Comment se lit ce mot ?'+(unk?'<br><small>Il contient des lettres pas encore vues.</small>':'')+'</p>',
+    opts:uniqOpts(list,w.tr,function(t){return '<b>'+t+'</b>';}),
+    explain:'<span class="ar" lang="ar">'+w.ar+'</span> se lit « '+w.tr+' » : '+w.fr+'.'};
+}
+function makeSignQ(ti){
+  var t=EXT[ti===undefined||ti===null?rnd(EXT.length):ti],e=pick(t.ex);
+  var same=shuffle(t.ex.filter(function(x){return x.tr!==e.tr;}).map(function(x){return x.tr;}));
+  var all=shuffle([].concat.apply([],EXT.map(function(z){return z.ex;})).filter(function(x){return x.tr!==e.tr;}).map(function(x){return x.tr;}));
+  var list=[e.tr].concat(same.slice(0,3));
+  all.forEach(function(x){if(list.length<4&&list.indexOf(x)<0)list.push(x);});
+  return {mode:'signes',i:-1,picked:null,
+    prompt:'<div class="big ar word" lang="ar">'+e.ar+'</div><p class="sub">Comment se lit ce mot ?</p>',
+    opts:uniqOpts(list,e.tr,function(x){return '<b>'+x+'</b>';}),
+    explain:'<span class="ar" lang="ar">'+e.ar+'</span> se lit « '+e.tr+' » : '+e.fr+'. <br><small>'+t.title+' : '+t.key+'</small>'};
+}
+function canStart(){return pool().length>0||(state.modes.size===1&&state.modes.has('signes'));}
+function startSigns(t){
+  var qs=[];for(var n=0;n<state.rounds;n++)qs.push(makeSignQ(t));
+  state.replay=t;state.noAudio=false;
+  state.quiz={qs:qs,i:0,score:0,missed:new Set()};
+  state.topic=null;go('quiz');
+}
 function startQuiz(){
-  var p=pool();if(!p.length)return;
-  var qs=[],last=-1;
+  var p=pool();if(!canStart())return;
+  var qs=[],last=-1;usedW={};state.replay=null;state.noAudio=false;
   for(var n=0;n<state.rounds;n++){
-    var w=p.map(function(i){return (i===last&&p.length>1)?0:4-mast(i);});
-    var tot=w.reduce(function(a,b){return a+b;},0),r=Math.random()*tot,i=p[0];
-    for(var k=0;k<p.length;k++){r-=w[k];if(r<=0){i=p[k];break;}}
-    last=i;
+    var i=-1;
+    if(p.length){
+      var w=p.map(function(x){return (x===last&&p.length>1)?0:4-mast(x);});
+      var tot=w.reduce(function(a,b){return a+b;},0),r=Math.random()*tot;i=p[0];
+      for(var k=0;k<p.length;k++){r-=w[k];if(r<=0){i=p[k];break;}}
+      last=i;
+    }
     var mode=pick(Array.from(state.modes));
-    qs.push(makeQ(mode,i,p));
+    if(mode==='signes')qs.push(makeSignQ());
+    else if(!p.length)qs.push(makeSignQ());
+    else if(mode==='mots')qs.push(makeWordQ(p));
+    else if(mode==='dictee')qs.push(makeDictee(i,p));
+    else qs.push(makeQ(mode,i,p));
   }
   state.quiz={qs:qs,i:0,score:0,missed:new Set()};
   go('quiz');
@@ -279,10 +372,28 @@ function answer(k){
   var q=state.quiz,c=q.qs[q.i];
   if(c.picked!==null||!c.opts[k])return;
   c.picked=k;
-  if(c.opts[k].ok){q.score++;setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.sylAudio)play(c.sylAudio,'q');}}
-  else{q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}
+  var good=c.opts[k].ok;
+  if(good){q.score++;if(c.i>=0)setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.sylAudio)play(c.sylAudio,'q');else if(c.wordAudio)play(c.wordAudio,'qw');}}
+  else{if(c.i>=0){q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}else if(c.wordAudio&&state.auto)play(c.wordAudio,'qw');}
   save();render();
   var g=app.querySelector('.fb .go');if(g){g.focus({preventScroll:true});g.scrollIntoView({block:'nearest'});}
+}
+function extBlock(){
+  return '<section class="lesson on"><div class="lhead static"><span>Compléments</span><span class="small">signes et règles</span></div><div class="tgrid">'+
+    EXT.map(function(t,k){return '<button class="tcard" data-a="topic" data-t="'+k+'"><span class="ar" lang="ar">'+t.glyph+'</span><span>'+t.title+'</span></button>';}).join('')+'</div></section>';
+}
+function topicView(k){
+  var T=EXT[k];
+  return '<button class="scrim" data-a="closetopic" aria-label="Fermer"></button><aside class="sheet" role="dialog" aria-modal="true" aria-label="'+T.title+'">'+
+    '<button class="x" data-a="closetopic" aria-label="Fermer">✕</button><h2 class="th">'+T.title+'</h2><p class="tip">'+T.key+'</p><h3>Exemples</h3>'+
+    T.ex.map(function(e){return '<div class="ex"><span class="ar" lang="ar">'+e.ar+'</span><div><b>'+e.tr+'</b><br><small>'+e.fr+'</small></div></div>';}).join('')+
+    '<button class="go" data-a="signs" data-t="'+k+'" style="margin-top:16px">S’entraîner</button>'+
+    '<p class="note">Pas d’enregistrement pour ces exemples : lis-les, puis vérifie avec la translittération.</p></aside>';
+}
+function autoPlayQ(){
+  if(state.view!=='quiz'||state.detail!==null||state.topic!==null)return;
+  var c=state.quiz&&state.quiz.qs[state.quiz.i];
+  if(c&&c.play&&!c.played&&c.picked===null){c.played=true;play(c.play[1],c.play[0]);}
 }
 
 /* ---------- views ---------- */
@@ -300,8 +411,8 @@ function homeView(){
   var chips=MODES.map(function(m){return '<button class="chip" role="checkbox" aria-checked="'+state.modes.has(m[0])+'" data-a="mode" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('');
   return '<header class="top"><h1 class="ar" lang="ar">حروف</h1><p>Les 28 lettres de l’arabe, une leçon à la fois.</p></header>'+
     '<section class="panel"><div class="chips" role="group" aria-label="Types d’exercices">'+chips+'</div><p class="hint">'+(state.modes.size===1?HELP[Array.from(state.modes)[0]]:'Les exercices cochés sont mélangés.')+'</p>'+'<p class="lbl">Questions par série</p><div class="chips rounds" role="radiogroup" aria-label="Nombre de questions">'+[5,10,20,30].map(function(n){return '<button class="chip" role="radio" aria-checked="'+(state.rounds===n)+'" data-a="rounds" data-n="'+n+'">'+n+'</button>';}).join('')+'</div>'+'<button class="chip auto" role="switch" aria-checked="'+state.auto+'" data-a="auto">Son automatique : '+(state.auto?'oui':'non')+'</button>'+
-    '<button class="go" data-a="start"'+(n?'':' disabled')+'>'+(n?'Réviser '+n+' lettres':'Coche au moins une leçon')+'</button></section>'+
-    LESSONS.map(function(_,li){return lessonBlock(li);}).join('');
+    '<button class="go" data-a="start"'+(canStart()?'':' disabled')+'>'+(n?'Réviser '+n+' lettres':(canStart()?'Commencer':'Coche au moins une leçon'))+'</button></section>'+
+    LESSONS.map(function(_,li){return lessonBlock(li);}).join('')+extBlock();
 }
 function quizView(){
   var q=state.quiz,c=q.qs[q.i],done=c.picked!==null,last=q.i===q.qs.length-1;
@@ -311,16 +422,17 @@ function quizView(){
     return '<button class="opt'+(o.g?' g':'')+cls+'" data-a="opt" data-k="'+k+'"'+(done?' disabled':'')+'>'+o.h+'</button>';
   }).join('');
   var ok=done&&c.opts[c.picked].ok;
-  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(c.audio?'<button class="spk" data-a="play" data-k="name" data-s="'+c.audio+'" aria-label="Réécouter la lettre">'+SPK+'</button>':(c.sylAudio?'<button class="spk" data-a="play" data-k="q" data-s="'+c.sylAudio+'" aria-label="Réécouter la syllabe">'+SPK+'</button>':''))+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
+  var rp=c.audio?['name',c.audio]:(c.sylAudio?['q',c.sylAudio]:(c.wordAudio?['qw',c.wordAudio]:(c.play||null)));
+  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(rp?'<button class="spk" data-a="play" data-k="'+rp[0]+'" data-s="'+rp[1]+'" aria-label="Réécouter">'+SPK+'</button>':'')+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
   return '<div class="qtop"><button class="x" data-a="home" aria-label="Quitter">✕</button><div class="prog"><i style="width:'+(q.i/q.qs.length*100)+'%"></i></div><span class="cnt">'+(q.i+1)+'/'+q.qs.length+'</span></div>'+
-    '<div class="qcard ruled">'+c.prompt+'</div><div class="opts">'+opts+'</div>'+fb;
+    '<div class="qcard ruled">'+c.prompt+'</div><div class="opts">'+opts+'</div>'+fb+(state.noAudio?audioNote():'');
 }
 function resultView(){
   var q=state.quiz,n=q.qs.length,s=q.score,miss=Array.from(q.missed);
   var msg=s/n>=0.9?'Très solide.':(s/n>=0.6?'Bien. Un autre tour pour fixer.':'Ces lettres demandent encore du travail. Ouvre leur fiche, puis rejoue.');
   return '<div class="res"><div class="score">'+s+'<span>/'+n+'</span></div><p class="msg">'+msg+'</p>'+
     (miss.length?'<h3>À revoir</h3><div class="grid">'+miss.map(tile).join('')+'</div>':'')+
-    '<button class="go" data-a="start">Rejouer</button><button class="ghost" data-a="home">Retour aux leçons</button></div>';
+    '<button class="go" data-a="again">Rejouer</button><button class="ghost" data-a="home">Retour aux leçons</button></div>';
 }
 function wordsView(i){
   var arr=QWORDS[QID[i]]||[];
@@ -349,10 +461,11 @@ function detailView(i){
 }
 function render(){
   var html=state.view==='home'?homeView():(state.view==='quiz'?quizView():resultView());
-  app.innerHTML=html+(state.detail!==null?detailView(state.detail):'');
-  document.body.classList.toggle('lock',state.detail!==null);
+  app.innerHTML=html+(state.detail!==null?detailView(state.detail):(state.topic!==null?topicView(state.topic):''));
+  document.body.classList.toggle('lock',state.detail!==null||state.topic!==null);
+  autoPlayQ();
 }
-function go(v){state.view=v;state.detail=null;render();window.scrollTo(0,0);}
+function go(v){state.view=v;state.detail=null;state.topic=null;render();window.scrollTo(0,0);}
 
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
@@ -365,14 +478,18 @@ document.addEventListener('click',function(e){
   else if(a==='start'){startQuiz();}
   else if(a==='open'){state.detail=+b.dataset.l;render();}
   else if(a==='close'){state.detail=null;render();}
+  else if(a==='topic'){state.topic=+b.dataset.t;render();}
+  else if(a==='closetopic'){state.topic=null;render();}
+  else if(a==='signs'){startSigns(+b.dataset.t);}
+  else if(a==='again'){if(state.replay!==null)startSigns(state.replay);else startQuiz();}
   else if(a==='play'){play(b.dataset.s,b.dataset.k);}
   else if(a==='opt'){answer(+b.dataset.k);}
   else if(a==='next'){var q=state.quiz;if(q.i+1<q.qs.length){q.i++;render();window.scrollTo(0,0);}else go('result');}
   else if(a==='home'){go('home');}
 });
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'&&state.detail!==null){state.detail=null;render();return;}
-  if(state.view==='quiz'&&state.detail===null&&/^[1-4]$/.test(e.key))answer(+e.key-1);
+  if(e.key==='Escape'&&(state.detail!==null||state.topic!==null)){state.detail=null;state.topic=null;render();return;}
+  if(state.view==='quiz'&&state.detail===null&&state.topic===null&&/^[1-4]$/.test(e.key))answer(+e.key-1);
 });
 
 load();render();
