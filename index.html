@@ -109,6 +109,8 @@ button.cell{cursor:pointer}
 .cell .ar{font-size:40px;display:block;line-height:1.6}
 .cell small{display:block;color:var(--ink2);font-size:12px}
 .ex{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.ex+.ex{margin-top:8px}
+button.cell:disabled{opacity:.4;cursor:default}
 .ex .ar{font-size:36px}
 .ex div{flex:1}
 .note{font-size:13px;color:var(--ink2);margin:14px 0 0}
@@ -166,7 +168,7 @@ var HELP={
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,noAudio:false,noVoice:false,auto:true,rounds:10};
+var state={view:'home',sel:new Set([0,1]),modes:new Set(['recognize']),mastery:{},quiz:null,detail:null,noAudio:false,auto:true,rounds:10};
 var app=document.getElementById('app');
 
 /* ---------- utils ---------- */
@@ -184,8 +186,10 @@ var REMOTE='https://www.arabicreadingcourse.com/';
 var cur=null;
 /* kind 'name' = nom de la lettre ; 'word' = son de la lettre dans des mots */
 function play(slug,kind){
-  var rel=(kind==='word'?'audio/':'audio/isolated-letters/')+slug+'.mp3';
-  var srcs=[rel,REMOTE+rel];
+  var srcs;
+  if(kind==='q')srcs=['audio/q/'+slug+'.mp3',QSITE+'audio/'+slug+'.mp3'];
+  else if(kind==='qw')srcs=[encodeURI('audio/qw/'+slug),encodeURI(QSITE+'sample-words/audio/'+slug)];
+  else{var rel=(kind==='word'?'audio/':'audio/isolated-letters/')+slug+'.mp3';srcs=[rel,REMOTE+rel];}
   if(cur){try{cur.pause();}catch(e){}}
   (function tryNext(k){
     if(k>=srcs.length){state.noAudio=true;render();return;}
@@ -197,35 +201,19 @@ function play(slug,kind){
     if(pr&&pr.catch)pr.catch(function(err){if(err&&err.name==='NotAllowedError')return;fail();});
   })(0);
 }
-var HARD=['ح','خ','ع','غ','ق','ص','ض','ط','ظ'];
-function voiceList(){try{return speechSynthesis.getVoices()||[];}catch(e){return [];}}
-function arVoice(){
-  var a=voiceList().filter(function(x){return /^ar([-_]|$)/i.test(x.lang);});
-  return a.filter(function(x){return x.localService;})[0]||a[0]||null;
-}
-function speakSyl(text){
-  try{
-    if(!('speechSynthesis' in window)){state.noVoice=true;render();return;}
-    var v=arVoice();
-    if(!v&&voiceList().length){state.noVoice=true;render();return;}
-    var u=new SpeechSynthesisUtterance(text);
-    u.lang=v?v.lang:'ar-SA';u.rate=0.6;
-    if(v)u.voice=v;
-    if(cur){try{cur.pause();}catch(e){}}
-    speechSynthesis.cancel();speechSynthesis.speak(u);
-  }catch(e){}
-}
-try{speechSynthesis.addEventListener('voiceschanged',function(){if(state.detail!==null)render();});}catch(e){}
-function sylNote(l){
-  if(state.noVoice)return '<p class="note warn"><strong>Aucune voix arabe sur cet appareil.</strong> Les syllabes ne peuvent pas être jouées. Installe une voix arabe dans les réglages de synthèse vocale de ton téléphone, puis recharge la page.</p>';
-  if(HARD.indexOf(l.c)>=0)return '<p class="note warn">Pour cette lettre, la voix de synthèse se trompe souvent. Ne te fie pas à ce son : compare avec le bouton « nom » ou un locuteur natif.</p>';
-  return '<p class="note">Syllabes : voix de synthèse de ton appareil (pas d’enregistrement natif disponible), donc approximative.</p>';
+var QID=['alif','ba','ta','tha','jeem','hha','kha','dal','thal','ra','zay','seen','sheen','saad','daad','toh','thoh','ayn','ghayn','fa','qaf','kaf','lam','meem','noon','ha','wow','ya'];
+var QMISS={'thal-kasra':1,'thoh-kasra':1};
+var QSITE='https://arabicquick.com/';
+var QWORDS={"alif":[{"a":"أسد","e":"lion","f":"Alif/1-Alif_lion_asad.mp3"},{"a":"فأر","e":"mouse","f":"Alif/2-Alif_mouse_faar.mp3"},{"a":"نبأ","e":"news","f":"Alif/3-Alif_news_nabaa.mp3"}],"ba":[{"a":"بجعة","e":"swan","f":"Ba/30-Ba_swan_bajaah.mp3"},{"a":"لعبة","e":"toy","f":"Ba/31-Ba_toy_lubah.mp3"},{"a":"عنب","e":"grapes","f":"Ba/32-Ba_grapes_enab.mp3"}],"ta":[{"a":"تمر","e":"dates","f":"Ta/43-Ta_dates_tamr.mp3"},{"a":"زعتر","e":"thyme","f":"Ta/44-Ta_thyme_zaatar.mp3"},{"a":"توت","e":"berry","f":"Ta/45-Ta_berry_toot.mp3"}],"tha":[{"a":"ثوم","e":"garlic","f":"Tha/57-Tha_Garlic_thawm.mp3"},{"a":"قثاء","e":"cucmber","f":"Tha/55-Tha_cucumber_qethaa.mp3"},{"a":"ماموث","e":"mammoth","f":"Tha/56-Tha_mammoth_mamooth.mp3"}],"jeem":[{"a":"جرس","e":"bell","f":"Jeem/65-Jeem_bell_jaras.mp3"},{"a":"نجم","e":"star","f":"Jeem/66-Jeem_star_najm.mp3"},{"a":"سراج","e":"lantern","f":"Jeem/67-Jeem_lantern_seraj.mp3"}],"hha":[{"a":"حصان","e":"horse","f":"hha/78-Hha_horse_Hisaan.mp3"},{"a":"طحينة","e":"tahini","f":"hha/79-Hha_tahini_tahinah.mp3"},{"a":"تفاح","e":"apples","f":"hha/80-Hha_apple_toffah.mp3"}],"kha":[{"a":"خروف","e":"sheep","f":"Kha/92-Kha_sheep_kharouf.mp3"},{"a":"نخلة","e":"palm","f":"Kha/93-Kha_palm_nakhlah.mp3"},{"a":"خوخ","e":"peach","f":"Kha/94-Kha_peach_khaukh.mp3"}],"dal":[{"a":"دبّ","e":"bear","f":"Dal/113-Dal_Beer_dobb.mp3"},{"a":"عدَس","e":"lentils","f":"Dal/105-Dal_lentils_adas.mp3"},{"a":"برّاد","e":"fridge","f":"Dal/106-Dal_fridge_barrad.mp3"}],"thal":[{"a":"ذبابة","e":"A fly","f":"Thal/117-Thal_A-fly_Thobabah.mp3"},{"a":"ينذر","e":"Warn","f":"Thal/118-Thal_Warn_Yonther.mp3"},{"a":"رذاذ","e":"Mist","f":"Thal/119-Thal_Mist_Rathaath.mp3"}],"ra":[{"a":"ريشة","e":"feather","f":"Ra/128-Ra_feather_reeshah.mp3"},{"a":"كرة","e":"ball","f":"Ra/129-Ra_ball_korah.mp3"},{"a":"عطر","e":"perfume","f":"Ra/130-Ra_perfume_ettr.mp3"}],"zay":[{"a":"زجاج","e":"glass","f":"zay/139-Zay_glass_zojaj.mp3"},{"a":"منزل","e":"house","f":"zay/140-Zay_house_manzil.mp3"},{"a":"موز","e":"banana","f":"zay/141-Zay_banana_mawz.mp3"}],"seen":[{"a":"سقف","e":"ceiling","f":"Seen/150-Seen_ceiling_saqf.mp3"},{"a":"حاسبة","e":"calculator","f":"Seen/151-Seen_calculator_hasebah.mp3"},{"a":"شمس","e":"sun","f":"Seen/152-Seen_sun_shams.mp3"}],"sheen":[{"a":"شجر","e":"trees","f":"Sheen/161-Sheen_tree_shajar.mp3"},{"a":"منشفة","e":"towel","f":"Sheen/162-Sheen_towel_menshafah.mp3"},{"a":"فراش","e":"bed","f":"Sheen/163-Sheen_bed_ferash.mp3"}],"saad":[{"a":"صقر","e":"falcon","f":"Saad/174-Saad_falcon_saqr.mp3"},{"a":"عصير","e":"juice","f":"Saad/175-Saad_juice_aseer.mp3"},{"a":"قرص","e":"tablet","f":"Saad/176-Saad_tablet_qors.mp3"}],"daad":[{"a":"ضبع","e":"hyena","f":"Daad/185-Daad_hyena_daba.mp3"},{"a":"منضدة","e":"table","f":"Daad/186-Daad_table_mendadah.mp3"},{"a":"بيض","e":"eggs","f":"Daad/187-Daad_eggs_bayd.mp3"}],"toh":[{"a":"طاووس","e":"peacock","f":"Toh/196-Toh_peacock_tawoos.mp3"},{"a":"بطريق","e":"penguin","f":"Toh/197-Toh_penguin_betreeq.mp3"},{"a":"وطواط","e":"bat","f":"Toh/198-Toh_bat_watwat.mp3"}],"thoh":[{"a":"ظرف","e":"envelope","f":"Thoh/209-Thoh_envelope_Tharf.mp3"},{"a":"عظمة","e":"bone","f":"Thoh/210-Thoh_bone_athmah.mp3"},{"a":"قيظ","e":"heat in summer","f":"Thoh/211-Thoh_heat-in-summer_qayth.mp3"}],"ayn":[{"a":"عروس","e":"bride","f":"Ayn/220-Ayn_bride_arous.mp3"},{"a":"نعجة","e":"ewe","f":"Ayn/221-Ayn_ewe_naajah.mp3"},{"a":"نعناع","e":"mint","f":"Ayn/222-Ayn_mint_neanaa.mp3"}],"ghayn":[{"a":"غزال","e":"gazelle","f":"Ghayn/233-Ghayn_gazelle_ghazal.mp3"},{"a":"الغروب","e":"the sunset","f":"Ghayn/234-Ghayn_sunset_al-ghoroub.mp3"},{"a":"صمغ","e":"glue","f":"Ghayn/235-Ghayn_glue_samgh.mp3"}],"fa":[{"a":"فراولة","e":"strawberry","f":"Fa/246-Fa_strawberry_Farawelah.mp3"},{"a":"مدفأة","e":"heater","f":"Fa/247-Fa_heater_medfaah.mp3"},{"a":"معطف","e":"coat","f":"Fa/248-Fa_coat_maetaf.mp3"}],"qaf":[{"a":"قمر","e":"moon","f":"Qaf/259-Qaf_moon_Qamar.mp3"},{"a":"بقرة","e":"cow","f":"Qaf/260-Qaf_cow_Baqarah.mp3"},{"a":"ورق","e":"papers","f":"Qaf/261-Qaf_papers_Waraq.mp3"}],"kaf":[{"a":"كتاب","e":"book","f":"Kaf/275-Kaf_Book_kitab.mp3"},{"a":"شوكة","e":"fork","f":"Kaf/271-Kaf_fork_Shawkah.mp3"},{"a":"كعك","e":"cakes","f":"Kaf/272-Kaf_cakes_kaak.mp3"}],"lam":[{"a":"ليمونة","e":"lemon","f":"Lam/282-Lam_lemon_Laymounah.mp3"},{"a":"جلد","e":"skin","f":"Lam/283-Lam_skin_Jeld.mp3"},{"a":"نخيل","e":"palm trees","f":"Lam/284-Lam_palm-trees_Nakheel.mp3"}],"meem":[{"a":"ماء","e":"water","f":"Meem/300-Meem_water_Maa.mp3"},{"a":"قميص","e":"shirt","f":"Meem/301-Meem_shirt_Qamees.mp3"},{"a":"يوم","e":"day","f":"Meem/302-Meem_day_Yawm.mp3"}],"noon":[{"a":"نعامة","e":"ostrich","f":"Noon/313-Noon_ostrich_Naamah.mp3"},{"a":"عندليب","e":"nightingale","f":"Noon/314-Noon_nightingale_Andaleeb.mp3"},{"a":"عنوان","e":"address","f":"Noon/315-Noon_address_Onwan.mp3"}],"ha":[{"a":"هرة","e":"cat","f":"Ha/326-Ha_cat_Herrah.mp3"},{"a":"نهر","e":"river","f":"Ha/327-Ha_river_Nahr.mp3"},{"a":"الله","e":"god","f":"Ha/328-Ha_god_ALLAH.mp3"}],"wow":[{"a":"وردة","e":"rose","f":"wow/339-Wow_rose_Wardah.mp3"},{"a":"ضوء","e":"light","f":"wow/340-Wow_light_Daw.mp3"},{"a":"مانجو","e":"mango","f":"wow/341-Wow_mango_Mango.mp3"}],"ya":[{"a":"يَمين","e":"Right","f":"Ya/362-Ya_Right_Yameen.mp3"},{"a":"عيَادة","e":"Clinic","f":"Ya/363-Ya_Clinic_Eyadah.mp3"}]};
+var FR={"lion":"lion","mouse":"souris","news":"nouvelle","swan":"cygne","toy":"jouet","grapes":"raisin","dates":"dattes","thyme":"thym","berry":"mûre","garlic":"ail","cucmber":"concombre","mammoth":"mammouth","bell":"cloche","star":"étoile","lantern":"lanterne","horse":"cheval","tahini":"tahini","apples":"pommes","sheep":"mouton","palm":"palmier","peach":"pêche","bear":"ours","lentils":"lentilles","fridge":"réfrigérateur","a fly":"mouche","warn":"avertir","mist":"brume","feather":"plume","ball":"ballon","perfume":"parfum","glass":"verre","house":"maison","banana":"banane","ceiling":"plafond","calculator":"calculatrice","sun":"soleil","trees":"arbres","towel":"serviette","bed":"lit","falcon":"faucon","juice":"jus","tablet":"comprimé","hyena":"hyène","table":"table","eggs":"œufs","peacock":"paon","penguin":"pingouin","bat":"chauve-souris","envelope":"enveloppe","bone":"os","heat in summer":"chaleur d’été","bride":"mariée","ewe":"brebis","mint":"menthe","gazelle":"gazelle","the sunset":"le coucher du soleil","glue":"colle","strawberry":"fraise","heater":"radiateur","coat":"manteau","moon":"lune","cow":"vache","papers":"papiers","book":"livre","fork":"fourchette","cakes":"gâteaux","lemon":"citron","skin":"peau","palm trees":"palmiers","water":"eau","shirt":"chemise","day":"jour","ostrich":"autruche","nightingale":"rossignol","address":"adresse","cat":"chat","river":"rivière","god":"Dieu","rose":"rose","light":"lumière","mango":"mangue","right":"droite","clinic":"clinique"};
+function sylNote(){
+  return '<p class="note">Sons des syllabes et des mots : enregistrements d’Arabic Quick.</p>';
 }
 function audioNote(){
   if(state.noAudio){
     return '<p class="note warn"><strong>Fichiers audio introuvables.</strong> Lance <code>download_audio.py</code> (il crée le dossier <code>audio</code>) à côté de <code>huruf.html</code>, ou vérifie ta connexion internet : sans les fichiers locaux, l’appli les charge depuis le site d’Arabic Reading Course.</p>';
   }
-  return '<p class="note">Sons : enregistrements d’Arabic Reading Course. « nom » = le nom de la lettre, « son » = la lettre dans des mots.</p>';
+  return '<p class="note">« nom » et « son » : Arabic Reading Course (le nom de la lettre, et la lettre dans des mots).</p>';
 }
 function distract(i,n,p){
   var ps=new Set(p);
@@ -253,7 +241,7 @@ function makeQ(mode,i,p){
     q.opts=ids.map(function(k){return {h:'<span class="ar" lang="ar">'+L[k].c+'</span>',ok:k===i,g:1};});
     q.explain=info;
   }else if(mode==='read'||mode==='formread'){
-    var vs=[[FA,'a'],[KA,'i'],[DA,'u']];var v=pick(vs);
+    var vs=[[FA,'a','fatha'],[KA,'i','kasra'],[DA,'u','damma']];var v=pick(vs);
     var syl=l.c+v[0];var right=l.tr+v[1];
     var fr=mode==='formread';var f=fr?pick(l.join?['ini','med','fin']:['iso','fin']):null;
     var glyph=fr?({iso:l.c+v[0],ini:l.c+v[0]+ZWJ,med:ZWJ+l.c+v[0]+ZWJ,fin:ZWJ+l.c+v[0]}[f]):syl;
@@ -262,7 +250,7 @@ function makeQ(mode,i,p){
     var labels=[right].concat(vs.filter(function(x){return x!==v;}).map(function(x){return l.tr+x[1];}),[L[o].tr+v[1]]);
     labels=Array.from(new Set(labels));
     q.opts=shuffle(labels).map(function(t){return {h:'<b>'+t+'</b>',ok:t===right};});
-    q.audio=null;q.syl=syl;q.prompt='<div class="big ar" lang="ar">'+glyph+'</div><p class="sub">'+(fr?'Cette syllabe, '+flbl+'. Comment se lit-elle ?':'Comment se lit cette syllabe ?')+'</p>';
+    var sk=QID[i]+'-'+v[2];q.audio=null;q.sylAudio=QMISS[sk]?null:sk;q.prompt='<div class="big ar" lang="ar">'+glyph+'</div><p class="sub">'+(fr?'Cette syllabe, '+flbl+'. Comment se lit-elle ?':'Comment se lit cette syllabe ?')+'</p>';
     q.explain=fr?'<span class="ar" lang="ar">'+glyph+'</span> est '+l.name+' '+flbl+', avec la voyelle « '+v[1]+' » : elle se lit « '+right+' ».':'<span class="ar" lang="ar">'+syl+'</span> se lit « '+right+' ».';
   }else{
     var f=pick(l.join?['ini','med','fin']:['iso','fin']);
@@ -291,7 +279,7 @@ function answer(k){
   var q=state.quiz,c=q.qs[q.i];
   if(c.picked!==null||!c.opts[k])return;
   c.picked=k;
-  if(c.opts[k].ok){q.score++;setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.syl)speakSyl(c.syl);}}
+  if(c.opts[k].ok){q.score++;setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.sylAudio)play(c.sylAudio,'q');}}
   else{q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}
   save();render();
   var g=app.querySelector('.fb .go');if(g){g.focus({preventScroll:true});g.scrollIntoView({block:'nearest'});}
@@ -323,7 +311,7 @@ function quizView(){
     return '<button class="opt'+(o.g?' g':'')+cls+'" data-a="opt" data-k="'+k+'"'+(done?' disabled':'')+'>'+o.h+'</button>';
   }).join('');
   var ok=done&&c.opts[c.picked].ok;
-  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(c.audio?'<button class="spk" data-a="play" data-k="name" data-s="'+c.audio+'" aria-label="Réécouter la lettre">'+SPK+'</button>':(c.syl?'<button class="spk" data-a="syl" data-s="'+c.syl+'" aria-label="Réécouter la syllabe">'+SPK+'</button>':''))+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
+  var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(c.audio?'<button class="spk" data-a="play" data-k="name" data-s="'+c.audio+'" aria-label="Réécouter la lettre">'+SPK+'</button>':(c.sylAudio?'<button class="spk" data-a="play" data-k="q" data-s="'+c.sylAudio+'" aria-label="Réécouter la syllabe">'+SPK+'</button>':''))+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
   return '<div class="qtop"><button class="x" data-a="home" aria-label="Quitter">✕</button><div class="prog"><i style="width:'+(q.i/q.qs.length*100)+'%"></i></div><span class="cnt">'+(q.i+1)+'/'+q.qs.length+'</span></div>'+
     '<div class="qcard ruled">'+c.prompt+'</div><div class="opts">'+opts+'</div>'+fb;
 }
@@ -334,9 +322,18 @@ function resultView(){
     (miss.length?'<h3>À revoir</h3><div class="grid">'+miss.map(tile).join('')+'</div>':'')+
     '<button class="go" data-a="start">Rejouer</button><button class="ghost" data-a="home">Retour aux leçons</button></div>';
 }
+function wordsView(i){
+  var arr=QWORDS[QID[i]]||[];
+  if(!arr.length)return '';
+  return '<h3>Mots exemples</h3>'+arr.map(function(w){
+    var tr=w.f.replace(/\.mp3$/i,'').split('_').pop();
+    var fr=FR[(w.e||'').toLowerCase()]||w.e;
+    return '<div class="ex"><span class="ar" lang="ar">'+w.a+'</span><div><b>'+tr+'</b><br><small>'+fr+'</small></div><button class="spk" data-a="play" data-k="qw" data-s="'+w.f+'" aria-label="Écouter le mot">'+SPK+'</button></div>';
+  }).join('');
+}
 function detailView(i){
   var l=L[i],f=forms(l);
-  var syl=l.noSyl?'':'<h3>Avec les voyelles brèves</h3><div class="cells c3">'+[[FA,'a'],[KA,'i'],[DA,'u']].map(function(v){return '<button class="cell" data-a="syl" data-s="'+l.c+v[0]+'" aria-label="Écouter '+l.tr+v[1]+'"><span class="ar" lang="ar">'+l.c+v[0]+'</span><small>'+l.tr+v[1]+'</small></button>';}).join('')+'</div>'+sylNote(l);
+  var syl=l.noSyl?'':'<h3>Avec les voyelles brèves</h3><div class="cells c3">'+[[FA,'a','fatha'],[KA,'i','kasra'],[DA,'u','damma']].map(function(v){var sk=QID[i]+'-'+v[2];return '<button class="cell" '+(QMISS[sk]?'disabled':'data-a="play" data-k="q" data-s="'+sk+'"')+' aria-label="Écouter '+l.tr+v[1]+'"><span class="ar" lang="ar">'+l.c+v[0]+'</span><small>'+l.tr+v[1]+'</small></button>';}).join('')+'</div>'+sylNote();
   return '<button class="scrim" data-a="close" aria-label="Fermer"></button>'+
   '<aside class="sheet" role="dialog" aria-modal="true" aria-label="Lettre '+l.name+'">'+
   '<button class="x" data-a="close" aria-label="Fermer">✕</button>'+
@@ -346,7 +343,7 @@ function detailView(i){
   '<h3>Les 4 formes</h3><div class="cells c4">'+
     [['iso','isolée'],['ini','début'],['med','milieu'],['fin','fin']].map(function(x){return '<div class="cell"><span class="ar" lang="ar">'+f[x[0]]+'</span><small>'+x[1]+'</small></div>';}).join('')+'</div>'+
   syl+
-  '<h3>Mot exemple</h3><div class="ex"><span class="ar" lang="ar">'+l.ex[0]+'</span><div><b>'+l.ex[1]+'</b><br><small>'+l.ex[2]+'</small></div></div>'+
+  wordsView(i)+
   audioNote()+
   '</aside>';
 }
@@ -368,7 +365,6 @@ document.addEventListener('click',function(e){
   else if(a==='start'){startQuiz();}
   else if(a==='open'){state.detail=+b.dataset.l;render();}
   else if(a==='close'){state.detail=null;render();}
-  else if(a==='syl'){speakSyl(b.dataset.s);}
   else if(a==='play'){play(b.dataset.s,b.dataset.k);}
   else if(a==='opt'){answer(+b.dataset.k);}
   else if(a==='next'){var q=state.quiz;if(q.i+1<q.qs.length){q.i++;render();window.scrollTo(0,0);}else go('result');}
