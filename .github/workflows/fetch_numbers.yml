@@ -1,0 +1,22 @@
+name: Fetch number audio
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - fetch_numbers.py
+      - .github/workflows/fetch_numbers.yml
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: which ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+      - run: python3 fetch_numbers.py || true
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A audio nums_log.txt
+          git diff --cached --quiet || git commit -m "Add number audio (Lingua Libre / Wikimedia Commons)"
+          git push
