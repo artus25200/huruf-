@@ -1,0 +1,473 @@
+{
+"alif": [
+{
+"a": "أسد",
+"e": "lion",
+"f": "Alif/1-Alif_lion_asad.mp3"
+},
+{
+"a": "فأر",
+"e": "mouse",
+"f": "Alif/2-Alif_mouse_faar.mp3"
+},
+{
+"a": "نبأ",
+"e": "news",
+"f": "Alif/3-Alif_news_nabaa.mp3"
+}
+],
+"ba": [
+{
+"a": "بجعة",
+"e": "swan",
+"f": "Ba/30-Ba_swan_bajaah.mp3"
+},
+{
+"a": "لعبة",
+"e": "toy",
+"f": "Ba/31-Ba_toy_lubah.mp3"
+},
+{
+"a": "عنب",
+"e": "grapes",
+"f": "Ba/32-Ba_grapes_enab.mp3"
+}
+],
+"ta": [
+{
+"a": "تمر",
+"e": "dates",
+"f": "Ta/43-Ta_dates_tamr.mp3"
+},
+{
+"a": "زعتر",
+"e": "thyme",
+"f": "Ta/44-Ta_thyme_zaatar.mp3"
+},
+{
+"a": "توت",
+"e": "berry",
+"f": "Ta/45-Ta_berry_toot.mp3"
+}
+],
+"tha": [
+{
+"a": "ثوم",
+"e": "garlic",
+"f": "Tha/57-Tha_Garlic_thawm.mp3"
+},
+{
+"a": "قثاء",
+"e": "cucmber",
+"f": "Tha/55-Tha_cucumber_qethaa.mp3"
+},
+{
+"a": "ماموث",
+"e": "mammoth",
+"f": "Tha/56-Tha_mammoth_mamooth.mp3"
+}
+],
+"jeem": [
+{
+"a": "جرس",
+"e": "bell",
+"f": "Jeem/65-Jeem_bell_jaras.mp3"
+},
+{
+"a": "نجم",
+"e": "star",
+"f": "Jeem/66-Jeem_star_najm.mp3"
+},
+{
+"a": "سراج",
+"e": "lantern",
+"f": "Jeem/67-Jeem_lantern_seraj.mp3"
+}
+],
+"hha": [
+{
+"a": "حصان",
+"e": "horse",
+"f": "hha/78-Hha_horse_Hisaan.mp3"
+},
+{
+"a": "طحينة",
+"e": "tahini",
+"f": "hha/79-Hha_tahini_tahinah.mp3"
+},
+{
+"a": "تفاح",
+"e": "apples",
+"f": "hha/80-Hha_apple_toffah.mp3"
+}
+],
+"kha": [
+{
+"a": "خروف",
+"e": "sheep",
+"f": "Kha/92-Kha_sheep_kharouf.mp3"
+},
+{
+"a": "نخلة",
+"e": "palm",
+"f": "Kha/93-Kha_palm_nakhlah.mp3"
+},
+{
+"a": "خوخ",
+"e": "peach",
+"f": "Kha/94-Kha_peach_khaukh.mp3"
+}
+],
+"dal": [
+{
+"a": "دبّ",
+"e": "bear",
+"f": "Dal/113-Dal_Beer_dobb.mp3"
+},
+{
+"a": "عدَس",
+"e": "lentils",
+"f": "Dal/105-Dal_lentils_adas.mp3"
+},
+{
+"a": "برّاد",
+"e": "fridge",
+"f": "Dal/106-Dal_fridge_barrad.mp3"
+}
+],
+"thal": [
+{
+"a": "ذبابة",
+"e": "A fly",
+"f": "Thal/117-Thal_A-fly_Thobabah.mp3"
+},
+{
+"a": "ينذر",
+"e": "Warn",
+"f": "Thal/118-Thal_Warn_Yonther.mp3"
+},
+{
+"a": "رذاذ",
+"e": "Mist",
+"f": "Thal/119-Thal_Mist_Rathaath.mp3"
+}
+],
+"ra": [
+{
+"a": "ريشة",
+"e": "feather",
+"f": "Ra/128-Ra_feather_reeshah.mp3"
+},
+{
+"a": "كرة",
+"e": "ball",
+"f": "Ra/129-Ra_ball_korah.mp3"
+},
+{
+"a": "عطر",
+"e": "perfume",
+"f": "Ra/130-Ra_perfume_ettr.mp3"
+}
+],
+"zay": [
+{
+"a": "زجاج",
+"e": "glass",
+"f": "zay/139-Zay_glass_zojaj.mp3"
+},
+{
+"a": "منزل",
+"e": "house",
+"f": "zay/140-Zay_house_manzil.mp3"
+},
+{
+"a": "موز",
+"e": "banana",
+"f": "zay/141-Zay_banana_mawz.mp3"
+}
+],
+"seen": [
+{
+"a": "سقف",
+"e": "ceiling",
+"f": "Seen/150-Seen_ceiling_saqf.mp3"
+},
+{
+"a": "حاسبة",
+"e": "calculator",
+"f": "Seen/151-Seen_calculator_hasebah.mp3"
+},
+{
+"a": "شمس",
+"e": "sun",
+"f": "Seen/152-Seen_sun_shams.mp3"
+}
+],
+"sheen": [
+{
+"a": "شجر",
+"e": "trees",
+"f": "Sheen/161-Sheen_tree_shajar.mp3"
+},
+{
+"a": "منشفة",
+"e": "towel",
+"f": "Sheen/162-Sheen_towel_menshafah.mp3"
+},
+{
+"a": "فراش",
+"e": "bed",
+"f": "Sheen/163-Sheen_bed_ferash.mp3"
+}
+],
+"saad": [
+{
+"a": "صقر",
+"e": "falcon",
+"f": "Saad/174-Saad_falcon_saqr.mp3"
+},
+{
+"a": "عصير",
+"e": "juice",
+"f": "Saad/175-Saad_juice_aseer.mp3"
+},
+{
+"a": "قرص",
+"e": "tablet",
+"f": "Saad/176-Saad_tablet_qors.mp3"
+}
+],
+"daad": [
+{
+"a": "ضبع",
+"e": "hyena",
+"f": "Daad/185-Daad_hyena_daba.mp3"
+},
+{
+"a": "منضدة",
+"e": "table",
+"f": "Daad/186-Daad_table_mendadah.mp3"
+},
+{
+"a": "بيض",
+"e": "eggs",
+"f": "Daad/187-Daad_eggs_bayd.mp3"
+}
+],
+"toh": [
+{
+"a": "طاووس",
+"e": "peacock",
+"f": "Toh/196-Toh_peacock_tawoos.mp3"
+},
+{
+"a": "بطريق",
+"e": "penguin",
+"f": "Toh/197-Toh_penguin_betreeq.mp3"
+},
+{
+"a": "وطواط",
+"e": "bat",
+"f": "Toh/198-Toh_bat_watwat.mp3"
+}
+],
+"thoh": [
+{
+"a": "ظرف",
+"e": "envelope",
+"f": "Thoh/209-Thoh_envelope_Tharf.mp3"
+},
+{
+"a": "عظمة",
+"e": "bone",
+"f": "Thoh/210-Thoh_bone_athmah.mp3"
+},
+{
+"a": "قيظ",
+"e": "heat in summer",
+"f": "Thoh/211-Thoh_heat-in-summer_qayth.mp3"
+}
+],
+"ayn": [
+{
+"a": "عروس",
+"e": "bride",
+"f": "Ayn/220-Ayn_bride_arous.mp3"
+},
+{
+"a": "نعجة",
+"e": "ewe",
+"f": "Ayn/221-Ayn_ewe_naajah.mp3"
+},
+{
+"a": "نعناع",
+"e": "mint",
+"f": "Ayn/222-Ayn_mint_neanaa.mp3"
+}
+],
+"ghayn": [
+{
+"a": "غزال",
+"e": "gazelle",
+"f": "Ghayn/233-Ghayn_gazelle_ghazal.mp3"
+},
+{
+"a": "الغروب",
+"e": "the sunset",
+"f": "Ghayn/234-Ghayn_sunset_al-ghoroub.mp3"
+},
+{
+"a": "صمغ",
+"e": "glue",
+"f": "Ghayn/235-Ghayn_glue_samgh.mp3"
+}
+],
+"fa": [
+{
+"a": "فراولة",
+"e": "strawberry",
+"f": "Fa/246-Fa_strawberry_Farawelah.mp3"
+},
+{
+"a": "مدفأة",
+"e": "heater",
+"f": "Fa/247-Fa_heater_medfaah.mp3"
+},
+{
+"a": "معطف",
+"e": "coat",
+"f": "Fa/248-Fa_coat_maetaf.mp3"
+}
+],
+"qaf": [
+{
+"a": "قمر",
+"e": "moon",
+"f": "Qaf/259-Qaf_moon_Qamar.mp3"
+},
+{
+"a": "بقرة",
+"e": "cow",
+"f": "Qaf/260-Qaf_cow_Baqarah.mp3"
+},
+{
+"a": "ورق",
+"e": "papers",
+"f": "Qaf/261-Qaf_papers_Waraq.mp3"
+}
+],
+"kaf": [
+{
+"a": "كتاب",
+"e": "book",
+"f": "Kaf/275-Kaf_Book_kitab.mp3"
+},
+{
+"a": "شوكة",
+"e": "fork",
+"f": "Kaf/271-Kaf_fork_Shawkah.mp3"
+},
+{
+"a": "كعك",
+"e": "cakes",
+"f": "Kaf/272-Kaf_cakes_kaak.mp3"
+}
+],
+"lam": [
+{
+"a": "ليمونة",
+"e": "lemon",
+"f": "Lam/282-Lam_lemon_Laymounah.mp3"
+},
+{
+"a": "جلد",
+"e": "skin",
+"f": "Lam/283-Lam_skin_Jeld.mp3"
+},
+{
+"a": "نخيل",
+"e": "palm trees",
+"f": "Lam/284-Lam_palm-trees_Nakheel.mp3"
+}
+],
+"meem": [
+{
+"a": "ماء",
+"e": "water",
+"f": "Meem/300-Meem_water_Maa.mp3"
+},
+{
+"a": "قميص",
+"e": "shirt",
+"f": "Meem/301-Meem_shirt_Qamees.mp3"
+},
+{
+"a": "يوم",
+"e": "day",
+"f": "Meem/302-Meem_day_Yawm.mp3"
+}
+],
+"noon": [
+{
+"a": "نعامة",
+"e": "ostrich",
+"f": "Noon/313-Noon_ostrich_Naamah.mp3"
+},
+{
+"a": "عندليب",
+"e": "nightingale",
+"f": "Noon/314-Noon_nightingale_Andaleeb.mp3"
+},
+{
+"a": "عنوان",
+"e": "address",
+"f": "Noon/315-Noon_address_Onwan.mp3"
+}
+],
+"ha": [
+{
+"a": "هرة",
+"e": "cat",
+"f": "Ha/326-Ha_cat_Herrah.mp3"
+},
+{
+"a": "نهر",
+"e": "river",
+"f": "Ha/327-Ha_river_Nahr.mp3"
+},
+{
+"a": "الله",
+"e": "god",
+"f": "Ha/328-Ha_god_ALLAH.mp3"
+}
+],
+"wow": [
+{
+"a": "وردة",
+"e": "rose",
+"f": "wow/339-Wow_rose_Wardah.mp3"
+},
+{
+"a": "ضوء",
+"e": "light",
+"f": "wow/340-Wow_light_Daw.mp3"
+},
+{
+"a": "مانجو",
+"e": "mango",
+"f": "wow/341-Wow_mango_Mango.mp3"
+}
+],
+"ya": [
+{
+"a": "يَـمين",
+"e": "Right",
+"f": "Ya/362-Ya_Right_Yameen.mp3"
+},
+{
+"a": "عـيَادة",
+"e": "Clinic",
+"f": "Ya/363-Ya_Clinic_Eyadah.mp3"
+}
+]
+}
