@@ -1,0 +1,134 @@
+=== PART A: arabicquick audio discovery
+https://arabicquick.com/alphabet-chart len 165379
+ audio refs in html: 111
+   /audio/alif.mp3
+   /audio/ayn.mp3
+   /audio/ba.mp3
+   /audio/daad.mp3
+   /audio/dal.mp3
+   /audio/fa.mp3
+   /audio/ghayn.mp3
+   /audio/ha.mp3
+   /audio/hha.mp3
+   /audio/jeem.mp3
+   /audio/kaf.mp3
+   /audio/kha.mp3
+   /audio/lam.mp3
+   /audio/meem.mp3
+   /audio/noon.mp3
+   /audio/qaf.mp3
+   /audio/ra.mp3
+   /audio/saad.mp3
+   /audio/seen.mp3
+   /audio/sheen.mp3
+   /audio/ta.mp3
+   /audio/tha.mp3
+   /audio/thal.mp3
+   /audio/thoh.mp3
+   /audio/toh.mp3
+   /audio/wow.mp3
+   /audio/ya.mp3
+   /audio/zay.mp3
+   /sample-words/audio/Alif/1-Alif_lion_asad.mp3
+   /sample-words/audio/Alif/2-Alif_mouse_faar.mp3
+   /sample-words/audio/Alif/3-Alif_news_nabaa.mp3
+   /sample-words/audio/Ayn/220-Ayn_bride_arous.mp3
+   /sample-words/audio/Ayn/221-Ayn_ewe_naajah.mp3
+   /sample-words/audio/Ayn/222-Ayn_mint_neanaa.mp3
+   /sample-words/audio/Ba/30-Ba_swan_bajaah.mp3
+   /sample-words/audio/Ba/31-Ba_toy_lubah.mp3
+   /sample-words/audio/Ba/32-Ba_grapes_enab.mp3
+   /sample-words/audio/Daad/185-Daad_hyena_daba.mp3
+   /sample-words/audio/Daad/186-Daad_table_mendadah.mp3
+   /sample-words/audio/Daad/187-Daad_eggs_bayd.mp3
+ scripts: ['/_next/static/chunks/ab77f027-81a844d924643e07.js', '/_next/static/chunks/28e444f9-314f59ab553cd22f.js', '/_next/static/chunks/846-b79c2bc92a5ba7d2.js', '/_next/static/chunks/main-app-3a20f865ae1b0e2a.js', '/_next/static/chunks/532-0cfe311d8ad15c5d.js', '/_next/static/chunks/app/layout-9e8971e1efeffbd3.js', '/_next/static/chunks/app/alphabet-chart/page-8ded5d14c5052ce0.js', '/_next/static/chunks/polyfills-42372ed130431b0a.js', '/_next/static/chunks/webpack-13b31d441b68c9ba.js', 'https://www.googletagmanager.com/gtag/js?id=G-7QTKXE7H6T']
+  JS https://arabicquick.com/_next/static/chunks/ab77f027-81a844d924643e07.js 173017 audio refs: []
+     ctx: break;case"iframe":case"object":case"embed":i6("load",n);break;case"video":case"audio":for(t=0;t<i3.length;t++)i6(i3[t],n);break;case"source":i6("error",n);break;case"img":case"image":case"link":i6("error"
+     ctx: ("close",e);break;case"iframe":case"object":i6("load",e);break;case"video":case"audio":for(l=0;l<i3.length;l++)i6(i3[l],e);break;case"image":i6("error",e),i6("load",e);break;case"details":i6("toggle",e);br
+     ctx: link[rel="modulepreload"][as="'+nr(t)+'"][href="'+nr(e)+'"]',l=r;switch(t){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":l=sK(e)}if(!sI.has(l)&&(e=m
+     ctx: dulepreload",href:e},n),sI.set(l,e),null===sV.querySelector(r))){switch(t){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":if(sV.querySelector(sY(l)))
+  JS https://arabicquick.com/_next/static/chunks/28e444f9-314f59ab553cd22f.js 189082 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/846-b79c2bc92a5ba7d2.js 173568 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/main-app-3a20f865ae1b0e2a.js 778 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/532-0cfe311d8ad15c5d.js 8531 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/app/layout-9e8971e1efeffbd3.js 4244 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/app/alphabet-chart/page-8ded5d14c5052ce0.js 4228 audio refs: []
+     ctx: ent.onended=()=>o(null))},[]);return(0,t.jsxs)(t.Fragment,{children:[(0,t.jsx)("audio",{ref:r}),(0,t.jsxs)("div",{className:"mb-3 hidden sm:grid grid-cols-[140px_1fr_1fr_1fr_1fr] gap-2 text-xs font-semibol
+     ctx: ono",children:["/",e.transliteration,"/"]})]}),c.map(a=>{let r="base"===a.key?"/audio/".concat(e.id,".mp3"):"/audio/".concat(e.id).concat(a.suffix,".mp3");return(0,t.jsx)(i,{src:r,arabic:e.arabic,diacritic
+     ctx: ration,"/"]})]}),c.map(a=>{let r="base"===a.key?"/audio/".concat(e.id,".mp3"):"/audio/".concat(e.id).concat(a.suffix,".mp3");return(0,t.jsx)(i,{src:r,arabic:e.arabic,diacritic:a,diacriticMark:a.mark,isActi
+  JS https://arabicquick.com/_next/static/chunks/polyfills-42372ed130431b0a.js 112541 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/webpack-13b31d441b68c9ba.js 3402 audio refs: []
+  JS https://www.googletagmanager.com/gtag/js?id=G-7QTKXE7H6T 465389 audio refs: []
+  html ctx: ription":"Arabic Quick teaches the Arabic alphabet to beginners of all ages using proven mnemonics, audio pronunciation, and interactive lessons.","knowsAbout":["Arabic alphabet","Arabic language","Arabic script","Arabic for kids"],"sameAs":[]}</script><script src=
+  html ctx: er</span></div><div><span class="font-bold text-white text-lg">112</span><span class="ml-1.5">Total audio clips</span></div><div><span class="font-bold text-white text-lg">Free</span><span class="ml-1.5">No sign-up</span></div></div></div></section><section class="
+  html ctx:  for offline reference</span></div></section><section class="max-w-6xl mx-auto px-4 sm:px-6 py-10"><audio></audio><div class="mb-3 hidden sm:grid grid-cols-[140px_1fr_1fr_1fr_1fr] gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider px-1"><span>Letter
+  html ctx: line reference</span></div></section><section class="max-w-6xl mx-auto px-4 sm:px-6 py-10"><audio></audio><div class="mb-3 hidden sm:grid grid-cols-[140px_1fr_1fr_1fr_1fr] gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider px-1"><span>Letter</span><
+  html ctx: n\\\":\\\"Arabic Quick teaches the Arabic alphabet to beginners of all ages using proven mnemonics, audio pronunciation, and interactive lessons.\\\",\\\"knowsAbout\\\":[\\\"Arabic alphabet\\\",\\\"Arabic language\\\",\\\"Arabic script\\\",\\\"Arabic for kids\\\"],
+  html ctx: pan\",null,{\"className\":\"ml-1.5\",\"children\":\"Sounds per letter\"}]]}],[\"$\",\"div\",\"Total audio clips\",{\"children\":[[\"$\",\"span\",null,{\"className\":\"font-bold text-white text-lg\",\"children\":\"112\"}],[\"$\",\"span\",null,{\"className\":\"ml-1.5
+  html ctx: ext-lg\",\"children\":\"112\"}],[\"$\",\"span\",null,{\"className\":\"ml-1.5\",\"children\":\"Total audio clips\"}]]}],[\"$\",\"div\",\"No sign-up\",{\"children\":[[\"$\",\"span\",null,{\"className\":\"font-bold text-white text-lg\",\"children\":\"Free\"}],[\"$\",\
+  html ctx: \"english\":\"lion\",\"image\":\"/sample-words/images/Alif_Arabic_Sample_Lion_asad_fullsize.png\",\"audio\":\"/sample-words/audio/Alif/1-Alif_lion_asad.mp3\"},{\"arabic\":\"فأر\",\"transliteration\":\"faar\",\"english\":\"mouse\",\"image\":\"/sample-words/images/Al
+https://arabicquick.com/learn/ba len 74522
+ audio refs in html: 7
+   /audio/ba-damma.mp3
+   /audio/ba-fatha.mp3
+   /audio/ba-kasra.mp3
+   /audio/ba.mp3
+   /sample-words/audio/Ba/30-Ba_swan_bajaah.mp3
+   /sample-words/audio/Ba/31-Ba_toy_lubah.mp3
+   /sample-words/audio/Ba/32-Ba_grapes_enab.mp3
+ scripts: ['/_next/static/chunks/ab77f027-81a844d924643e07.js', '/_next/static/chunks/28e444f9-314f59ab553cd22f.js', '/_next/static/chunks/846-b79c2bc92a5ba7d2.js', '/_next/static/chunks/main-app-3a20f865ae1b0e2a.js', '/_next/static/chunks/532-0cfe311d8ad15c5d.js', '/_next/static/chunks/app/layout-9e8971e1efeffbd3.js', '/_next/static/chunks/557-0a76367b89bcc937.js', '/_next/static/chunks/app/learn/%5Bletter%5D/page-fbfcf625d3c0f24d.js', '/_next/static/chunks/polyfills-42372ed130431b0a.js', '/_next/static/chunks/webpack-13b31d441b68c9ba.js', 'https://www.googletagmanager.com/gtag/js?id=G-7QTKXE7H6T']
+  JS https://arabicquick.com/_next/static/chunks/ab77f027-81a844d924643e07.js 173017 audio refs: []
+     ctx: break;case"iframe":case"object":case"embed":i6("load",n);break;case"video":case"audio":for(t=0;t<i3.length;t++)i6(i3[t],n);break;case"source":i6("error",n);break;case"img":case"image":case"link":i6("error"
+     ctx: ("close",e);break;case"iframe":case"object":i6("load",e);break;case"video":case"audio":for(l=0;l<i3.length;l++)i6(i3[l],e);break;case"image":i6("error",e),i6("load",e);break;case"details":i6("toggle",e);br
+     ctx: link[rel="modulepreload"][as="'+nr(t)+'"][href="'+nr(e)+'"]',l=r;switch(t){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":l=sK(e)}if(!sI.has(l)&&(e=m
+     ctx: dulepreload",href:e},n),sI.set(l,e),null===sV.querySelector(r))){switch(t){case"audioworklet":case"paintworklet":case"serviceworker":case"sharedworker":case"worker":case"script":if(sV.querySelector(sY(l)))
+  JS https://arabicquick.com/_next/static/chunks/28e444f9-314f59ab553cd22f.js 189082 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/846-b79c2bc92a5ba7d2.js 173568 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/main-app-3a20f865ae1b0e2a.js 778 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/532-0cfe311d8ad15c5d.js 8531 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/app/layout-9e8971e1efeffbd3.js 4244 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/557-0a76367b89bcc937.js 13554 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/app/learn/%5Bletter%5D/page-fbfcf625d3c0f24d.js 3103 audio refs: []
+     ctx: ntTime=0,u(!1)):(a.current.play().catch(()=>{u(!1)}),u(!0),c.Ay.capture("letter_audio_played",{letter:n}))},"aria-label":"Play pronunciation of ".concat(n),className:"\n        ".concat({sm:"w-9 h-9 text-s
+     ctx: ine-none focus:ring-2 focus:ring-teal focus:ring-offset-2\n        ").concat(o?"audio-playing":"","\n      "),children:o?(0,r.jsxs)("svg",{className:"w-5 h-5",fill:"currentColor",viewBox:"0 0 24 24",childr
+     ctx: lt:()=>o});var r=n(6596),l=n(8568),c=n(5483),i=n.n(c);function o(e){let{image:t,audio:n,english:c,arabic:o}=e,u=(0,l.useRef)(null),[a,s]=(0,l.useState)(!1);return(0,r.jsx)("div",{onClick:function(){n&&(u.c
+  JS https://arabicquick.com/_next/static/chunks/polyfills-42372ed130431b0a.js 112541 audio refs: []
+  JS https://arabicquick.com/_next/static/chunks/webpack-13b31d441b68c9ba.js 3402 audio refs: []
+  JS https://www.googletagmanager.com/gtag/js?id=G-7QTKXE7H6T 465389 audio refs: []
+  html ctx: ription":"Arabic Quick teaches the Arabic alphabet to beginners of all ages using proven mnemonics, audio pronunciation, and interactive lessons.","knowsAbout":["Arabic alphabet","Arabic language","Arabic script","Arabic for kids"],"sameAs":[]}</script><script src=
+  html ctx: n\\\":\\\"Arabic Quick teaches the Arabic alphabet to beginners of all ages using proven mnemonics, audio pronunciation, and interactive lessons.\\\",\\\"knowsAbout\\\":[\\\"Arabic alphabet\\\",\\\"Arabic language\\\",\\\"Arabic script\\\",\\\"Arabic for kids\\\"],
+  html ctx: ":\"clamp(48px, 8vw, 80px)\"},\"lang\":\"ar\",\"children\":\"ب\"}],[\"$\",\"$L1b\",null,{\"src\":\"/audio/ba.mp3\",\"label\":\"Ba\",\"size\":\"sm\"}]]}]}],[\"$\",\"div\",null,{\"className\":\"flex flex-wrap gap-2\",\"children\":[[\"$\",\"span\",null,{\"className\":
+  html ctx: null,{\"className\":\"mb-4 flex items-center gap-3\",\"children\":[[\"$\",\"$L1b\",null,{\"src\":\"/audio/ba.mp3\",\"label\":\"Ba\",\"size\":\"sm\"}],[\"$\",\"span\",null,{\"className\":\"text-sm text-gray-500\",\"children\":\"Slow-motion pronunciation (MSA)\"}]]}]
+  html ctx: "$L23\",\"bajaah0\",{\"image\":\"/sample-words/images/Ba_Arabic_Sample_Swan_bajaah_fullsize.png\",\"audio\":\"/sample-words/audio/Ba/30-Ba_swan_bajaah.mp3\",\"english\":\"swan\",\"arabic\":\"بجعة\"}],\"$L24\",\"$L25\"]}]]}],\"$L26\",\"$L27\",\"$L28\"]}]\n"])</scrip
+  html ctx: mage\":\"/sample-words/images/Ba_Arabic_Sample_Swan_bajaah_fullsize.png\",\"audio\":\"/sample-words/audio/Ba/30-Ba_swan_bajaah.mp3\",\"english\":\"swan\",\"arabic\":\"بجعة\"}],\"$L24\",\"$L25\"]}]]}],\"$L26\",\"$L27\",\"$L28\"]}]\n"])</script><script>self.__next_f.
+  html ctx: ",\"$L23\",\"lubah1\",{\"image\":\"/sample-words/images/Ba_Arabic_Sample_Toy_lubah_fullsize.png\",\"audio\":\"/sample-words/audio/Ba/31-Ba_toy_lubah.mp3\",\"english\":\"toy\",\"arabic\":\"لعبة\"}]\n25:[\"$\",\"$L23\",\"enab2\",{\"image\":\"/sample-words/images/Ba_A
+  html ctx: "image\":\"/sample-words/images/Ba_Arabic_Sample_Toy_lubah_fullsize.png\",\"audio\":\"/sample-words/audio/Ba/31-Ba_toy_lubah.mp3\",\"english\":\"toy\",\"arabic\":\"لعبة\"}]\n25:[\"$\",\"$L23\",\"enab2\",{\"image\":\"/sample-words/images/Ba_Arabic_Sample_Grapes_enab
+=== PART B: Wikimedia Commons Lingua Libre
+أسد -> ['File:LL-Q13955 (ara)-Fenakhay-أسد.wav']
+بيت -> ['File:LL-Q13955 (ara)-Annisa Tiara Ramadhani-بيت.wav']
+تفاح -> ['File:LL-Q13955 (ara)-Fjmustak-تفاح.wav']
+ثعلب -> MISS (1 hits)
+جمل -> ['File:LL-Q13955 (ara)-Spotless Mind1988-جمل.wav', 'File:LL-Q13955 (ara)-Annisa Tiara Ramadhani-جمل.wav']
+حليب -> MISS (0 hits)
+خبز -> MISS (3 hits)
+درس -> MISS (1 hits)
+ذهب -> ['File:LL-Q13955 (ara)-Kadimi hasna-ذهب.wav']
+رجل -> ['File:LL-Q13955 (ara)-Zinou2go-رجل.wav', 'File:LL-Q13955 (ara)-Annisa Tiara Ramadhani-رجل.wav']
+زهرة ERR HTTP Error 429: Too Many Requests
+سمك ERR HTTP Error 429: Too Many Requests
+شمس ERR HTTP Error 429: Too Many Requests
+صباح ERR HTTP Error 429: Too Many Requests
+ضوء ERR HTTP Error 429: Too Many Requests
+طاولة ERR HTTP Error 429: Too Many Requests
+ظل ERR HTTP Error 429: Too Many Requests
+عين ERR HTTP Error 429: Too Many Requests
+غابة ERR HTTP Error 429: Too Many Requests
+فيل ERR HTTP Error 429: Too Many Requests
+قمر ERR HTTP Error 429: Too Many Requests
+كتاب ERR HTTP Error 429: Too Many Requests
+ليل ERR HTTP Error 429: Too Many Requests
+ماء ERR HTTP Error 429: Too Many Requests
+نجم ERR HTTP Error 429: Too Many Requests
+هلال ERR HTTP Error 429: Too Many Requests
+وردة ERR HTTP Error 429: Too Many Requests
+يد ERR HTTP Error 429: Too Many Requests
