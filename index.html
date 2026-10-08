@@ -120,6 +120,8 @@ button.cell:disabled{opacity:.4;cursor:default}
 .bigplay{width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;margin:0 auto 6px}
 .bigplay svg{width:36px;height:36px}
 .qcard .big.word{font-size:64px;line-height:1.9}
+.nd{font-size:44px;min-width:60px;text-align:center;line-height:1.4}
+.nm2{font-size:24px}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
 .tcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:10px;text-align:left;font-weight:600}
 .tcard .ar{font-size:30px;line-height:1.5;min-width:36px;text-align:center}
@@ -172,7 +174,7 @@ var L=[
 {c:'ي',name:'yāʾ',ar:'ياء',tr:'y',say:'comme « y » (ou ī long)',tip:'2 points en dessous.',join:1,fam:'ba',ex:['يَد','yad','main']}
 ];
 var LESSONS=[[0,1,2,3],[4,5,6],[7,8,9,10],[11,12,13,14],[15,16,17,18],[19,20,21,22],[23,24,25,26,27]];
-var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes'],['formread','Forme & lire'],['dictee','Dictée'],['mots','Lire des mots'],['signes','Signes']];
+var MODES=[['recognize','Reconnaître'],['find','Retrouver'],['read','Lire'],['forms','Formes'],['formread','Forme & lire'],['dictee','Dictée'],['mots','Lire des mots'],['signes','Signes'],['chiffres','Chiffres']];
 var HELP={
   recognize:'Tu vois une lettre, tu choisis son nom.',
   find:'Tu vois un nom, tu choisis la lettre.',
@@ -181,7 +183,8 @@ var HELP={
   formread:'La lettre liée dans un mot, avec sa voyelle : lis la syllabe.',
   dictee:'Tu écoutes un son, tu choisis la lettre ou la syllabe.',
   mots:'Lis un vrai mot (sans voyelles brèves) et choisis sa translittération.',
-  signes:'Voyelles longues, sukūn, shadda, tanwīn, tāʾ marbūṭa, hamza.'
+  signes:'Voyelles longues, sukūn, shadda, tanwīn, tāʾ marbūṭa, hamza.',
+  chiffres:'Les chiffres ٠ à ١٠ : les lire, les écouter, les retrouver.'
 };
 var SPK='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
@@ -205,6 +208,7 @@ var cur=null;
 function play(slug,kind){
   var srcs;
   if(kind==='q')srcs=['audio/q/'+slug+'.mp3',QSITE+'audio/'+slug+'.mp3'];
+  else if(kind==='num')srcs=['audio/nums/'+slug+'.mp3'];
   else if(kind==='qw')srcs=[encodeURI('audio/qw/'+slug),encodeURI(QSITE+'sample-words/audio/'+slug)];
   else{var rel=(kind==='word'?'audio/':'audio/isolated-letters/')+slug+'.mp3';srcs=[rel,REMOTE+rel];}
   if(cur){try{cur.pause();}catch(e){}}
@@ -347,7 +351,42 @@ function makeSignQ(ti){
     opts:uniqOpts(list,e.tr,function(x){return '<b>'+x+'</b>';}),
     explain:'<span class="ar" lang="ar">'+e.ar+'</span> se lit « '+e.tr+' » : '+e.fr+'. <br><small>'+t.title+' : '+t.key+'</small>'};
 }
-function canStart(){return pool().length>0||(state.modes.size===1&&state.modes.has('signes'));}
+
+var NUMS=[{"n":0,"d":"٠","ar":"صِفْر","tr":"ṣifr","fr":"zéro","tip":"Un simple point."},{"n":1,"d":"١","ar":"وَاحِد","tr":"wāḥid","fr":"un","tip":"Un trait vertical, comme notre 1."},{"n":2,"d":"٢","ar":"اثْنَان","tr":"ithnān","fr":"deux","tip":""},{"n":3,"d":"٣","ar":"ثَلَاثَة","tr":"thalātha","fr":"trois","tip":"Ressemble à un 3 couché."},{"n":4,"d":"٤","ar":"أَرْبَعَة","tr":"arbaʿa","fr":"quatre","tip":"Ressemble à un 3 retourné."},{"n":5,"d":"٥","ar":"خَمْسَة","tr":"khamsa","fr":"cinq","tip":"Un rond, comme notre 0 : ne le confonds pas avec ٠."},{"n":6,"d":"٦","ar":"سِتَّة","tr":"sitta","fr":"six","tip":"Ressemble à notre 7."},{"n":7,"d":"٧","ar":"سَبْعَة","tr":"sabʿa","fr":"sept","tip":"Ressemble à un V."},{"n":8,"d":"٨","ar":"ثَمَانِيَة","tr":"thamāniya","fr":"huit","tip":"Un V à l’envers (Λ)."},{"n":9,"d":"٩","ar":"تِسْعَة","tr":"tisʿa","fr":"neuf","tip":"Comme notre 9."},{"n":10,"d":"١٠","ar":"عَشَرَة","tr":"ʿashara","fr":"dix","tip":"Un 1 suivi d’un point (٠)."}];
+function makeNumQ(){
+  var x=pick(NUMS),type=rnd(3);
+  var others=shuffle(NUMS.filter(function(y){return y.n!==x.n;}));
+  var three=others.slice(0,3);
+  var digitOpts=function(){return shuffle([x].concat(three)).map(function(y){return {h:'<span class="ar" lang="ar">'+y.d+'</span>',ok:y.n===x.n,g:1};});};
+  var info='<span class="ar" lang="ar">'+x.d+'</span> = <span class="ar" lang="ar">'+x.ar+'</span> ('+x.tr+'), '+x.fr+'.'+(x.tip?' <small>'+x.tip+'</small>':'');
+  if(type===0){
+    return {mode:'chiffres',i:-1,picked:null,numAudio:x.n,
+      prompt:'<div class="big ar" lang="ar">'+x.d+'</div><p class="sub">Comment s’appelle ce chiffre ?</p>',
+      opts:shuffle([x].concat(three)).map(function(y){return {h:'<b>'+y.tr+'</b><small>'+y.fr+'</small>',ok:y.n===x.n};}),explain:info};
+  }
+  if(type===1){
+    return {mode:'chiffres',i:-1,picked:null,numAudio:x.n,
+      prompt:'<div class="big ar word" lang="ar">'+x.ar+'</div><p class="sub">Quel est ce nombre ?</p>',opts:digitOpts(),explain:info};
+  }
+  var q={mode:'chiffres',i:-1,picked:null,play:['num',String(x.n)],opts:digitOpts(),explain:info};
+  q.prompt=bigPlay(q)+'<p class="sub">Quel chiffre entends-tu ?</p>';
+  return q;
+}
+function startNums(){
+  var qs=[];for(var n=0;n<state.rounds;n++)qs.push(makeNumQ());
+  state.replay='nums';state.noAudio=false;
+  state.quiz={qs:qs,i:0,score:0,missed:new Set()};
+  state.topic=null;go('quiz');
+}
+function numsView(){
+  return '<button class="scrim" data-a="closetopic" aria-label="Fermer"></button><aside class="sheet" role="dialog" aria-modal="true" aria-label="Chiffres">'+
+    '<button class="x" data-a="closetopic" aria-label="Fermer">✕</button><h2 class="th">Chiffres</h2>'+
+    '<p class="tip">Les chiffres arabes s’écrivent de gauche à droite, même quand les lettres vont de droite à gauche. Attention : ٥ est un rond et ٠ est un point.</p><h3>De 0 à 10</h3>'+
+    NUMS.map(function(x){return '<div class="ex"><span class="ar nd" lang="ar">'+x.d+'</span><div><span class="ar nm2" lang="ar">'+x.ar+'</span><br><b>'+x.tr+'</b> · <small>'+x.fr+'</small>'+(x.tip?'<br><small>'+x.tip+'</small>':'')+'</div><button class="spk" data-a="play" data-k="num" data-s="'+x.n+'" aria-label="Écouter '+x.fr+'">'+SPK+'</button></div>';}).join('')+
+    '<button class="go" data-a="numstrain" style="margin-top:16px">S’entraîner</button>'+
+    '<p class="note">Enregistrements : Lingua Libre (Wikimedia Commons).</p></aside>';
+}
+function canStart(){return pool().length>0||Array.from(state.modes).every(function(m){return m==='signes'||m==='chiffres';});}
 function startSigns(t){
   var qs=[];for(var n=0;n<state.rounds;n++)qs.push(makeSignQ(t));
   state.replay=t;state.noAudio=false;
@@ -365,9 +404,11 @@ function startQuiz(){
       for(var k=0;k<p.length;k++){r-=w[k];if(r<=0){i=p[k];break;}}
       last=i;
     }
-    var mode=pick(Array.from(state.modes));
+    var ms=Array.from(state.modes);
+    if(!p.length)ms=ms.filter(function(m){return m==='signes'||m==='chiffres';});
+    var mode=pick(ms);
     if(mode==='signes')qs.push(makeSignQ());
-    else if(!p.length)qs.push(makeSignQ());
+    else if(mode==='chiffres')qs.push(makeNumQ());
     else if(mode==='mots')qs.push(makeWordQ(p));
     else if(mode==='dictee')qs.push(makeDictee(i,p));
     else qs.push(makeQ(mode,i,p));
@@ -380,16 +421,17 @@ function answer(k){
   if(c.picked!==null||!c.opts[k])return;
   c.picked=k;
   var good=c.opts[k].ok;
-  if(good){q.score++;if(c.i>=0)setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.sylAudio)play(c.sylAudio,'q');else if(c.wordAudio)play(c.wordAudio,'qw');}}
-  else{if(c.i>=0){q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}else if(c.wordAudio&&state.auto)play(c.wordAudio,'qw');}
+  if(good){q.score++;if(c.i>=0)setMast(c.i,mast(c.i)+1);if(state.auto){if(c.audio)play(c.audio,'name');else if(c.sylAudio)play(c.sylAudio,'q');else if(c.wordAudio)play(c.wordAudio,'qw');else if(c.numAudio!=null)play(String(c.numAudio),'num');}}
+  else{if(c.i>=0){q.missed.add(c.i);setMast(c.i,mast(c.i)-1);}else if(c.wordAudio&&state.auto)play(c.wordAudio,'qw');else if(c.numAudio!=null&&state.auto)play(String(c.numAudio),'num');}
   save();render();
   var g=app.querySelector('.fb .go');if(g){g.focus({preventScroll:true});g.scrollIntoView({block:'nearest'});}
 }
 function extBlock(){
-  return '<section class="lesson on"><div class="lhead static"><span>Compléments</span><span class="small">signes et règles</span></div><div class="tgrid">'+
-    EXT.map(function(t,k){return '<button class="tcard" data-a="topic" data-t="'+k+'"><span class="ar" lang="ar">'+t.glyph+'</span><span>'+t.title+'</span></button>';}).join('')+'</div></section>';
+  return '<section class="lesson on"><div class="lhead static"><span>Compléments</span><span class="small">signes, règles, chiffres</span></div><div class="tgrid">'+
+    EXT.map(function(t,k){return '<button class="tcard" data-a="topic" data-t="'+k+'"><span class="ar" lang="ar">'+t.glyph+'</span><span>'+t.title+'</span></button>';}).join('')+'<button class="tcard" data-a="numsopen"><span class="ar" lang="ar">١٢٣</span><span>Chiffres</span></button></div></section>';
 }
 function topicView(k){
+  if(k==='nums')return numsView();
   var T=EXT[k];
   return '<button class="scrim" data-a="closetopic" aria-label="Fermer"></button><aside class="sheet" role="dialog" aria-modal="true" aria-label="'+T.title+'">'+
     '<button class="x" data-a="closetopic" aria-label="Fermer">✕</button><h2 class="th">'+T.title+'</h2><p class="tip">'+T.key+'</p><h3>Exemples</h3>'+
@@ -429,7 +471,7 @@ function quizView(){
     return '<button class="opt'+(o.g?' g':'')+cls+'" data-a="opt" data-k="'+k+'"'+(done?' disabled':'')+'>'+o.h+'</button>';
   }).join('');
   var ok=done&&c.opts[c.picked].ok;
-  var rp=c.audio?['name',c.audio]:(c.sylAudio?['q',c.sylAudio]:(c.wordAudio?['qw',c.wordAudio]:(c.play||null)));
+  var rp=c.audio?['name',c.audio]:(c.sylAudio?['q',c.sylAudio]:(c.wordAudio?['qw',c.wordAudio]:(c.numAudio!=null?['num',String(c.numAudio)]:(c.play||null))));
   var fb=done?'<div class="fb'+(ok?'':' bad')+'" role="status"><p><strong>'+(ok?'Juste.':'Pas tout à fait.')+'</strong> '+c.explain+'</p><div class="row">'+(rp?'<button class="spk" data-a="play" data-k="'+rp[0]+'" data-s="'+rp[1]+'" aria-label="Réécouter">'+SPK+'</button>':'')+'<button class="go" data-a="next">'+(last?'Voir le score':'Suivant')+'</button></div></div>':'';
   return '<div class="qtop"><button class="x" data-a="home" aria-label="Quitter">✕</button><div class="prog"><i style="width:'+(q.i/q.qs.length*100)+'%"></i></div><span class="cnt">'+(q.i+1)+'/'+q.qs.length+'</span></div>'+
     '<div class="qcard ruled">'+c.prompt+'</div><div class="opts">'+opts+'</div>'+fb+(state.noAudio?audioNote():'');
@@ -488,8 +530,10 @@ document.addEventListener('click',function(e){
   else if(a==='close'){state.detail=null;render();}
   else if(a==='topic'){state.topic=+b.dataset.t;render();}
   else if(a==='closetopic'){state.topic=null;render();}
+  else if(a==='numsopen'){state.topic='nums';render();}
+  else if(a==='numstrain'){startNums();}
   else if(a==='signs'){startSigns(+b.dataset.t);}
-  else if(a==='again'){if(state.replay!==null)startSigns(state.replay);else startQuiz();}
+  else if(a==='again'){if(state.replay==='nums')startNums();else if(state.replay!==null)startSigns(state.replay);else startQuiz();}
   else if(a==='play'){play(b.dataset.s,b.dataset.k);}
   else if(a==='opt'){answer(+b.dataset.k);}
   else if(a==='next'){var q=state.quiz;if(q.i+1<q.qs.length){q.i++;render();window.scrollTo(0,0);}else go('result');}
