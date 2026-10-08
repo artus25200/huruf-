@@ -5,7 +5,7 @@ PREF = ["Zinou2go", "Ov3for"]
 log = []
 def get(url, binary=False):
     for attempt in range(5):
-        time.sleep(3)
+        time.sleep(6)
         try:
             req = urllib.request.Request(url, headers=WUA)
             with urllib.request.urlopen(req, timeout=60) as r:
@@ -17,6 +17,8 @@ def get(url, binary=False):
             raise
 os.makedirs("audio/nums", exist_ok=True)
 for n, w in NUMS:
+    if os.path.exists(f'audio/nums/{n}.mp3'):
+        log.append(f'skip {n} (already there)'); continue
     try:
         q = urllib.parse.urlencode({"action": "query", "list": "search", "srnamespace": 6, "srlimit": 30, "format": "json", "srsearch": "LL-Q13955 " + w})
         d = json.loads(get("https://commons.wikimedia.org/w/api.php?" + q))
